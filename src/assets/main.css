@@ -1,1 +1,20 @@
 @import './base.css';
+
+:root {
+    --primary-color: #de7a3c;
+    --secondary-color: #1d3c45;
+    --tertiary-color: #fff1e1;
+    --font-size: 16px;
+}
+
+.cardx{
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+    border-color: var(--secondary-color);
+    border-radius: 8px;
+    padding: 16px;
+}
+
+body {
+    background-color: var(--tertiary-color) !important;
+}
