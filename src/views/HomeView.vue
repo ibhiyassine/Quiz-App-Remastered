@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import NavBar from '../components/NavBar.vue'
 import Sidebar from '../components/optionsItem.vue' 
 import { RouterView } from 'vue-router'
+import ComapctQuizCard from '@/components/ComapctQuizCard.vue'
 
 const barvisible = ref(true)
 
@@ -21,10 +22,11 @@ function toggleSidebar() {
       </transition>
 
       <main class="main-content">
-        <div>
-          <h1 class="text-center" style="color: #d2601a; font-size: 40px; font-weight: bold;">Welcome to the Home Page</h1>
-          <p class="text-center" style="font-size: 20px;">This is the main content area.</p>
-          <p class="text-center" style="font-size: 20px;">You can add your content here.</p>  
+        <div class="d-flex flex-wrap">
+
+          <ComapctQuizCard />
+          <ComapctQuizCard />
+          <ComapctQuizCard />
         </div>
         <RouterView />
       </main>

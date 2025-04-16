@@ -15,6 +15,7 @@
     padding: 16px;
 }
 
-body {
+body{
     background-color: var(--tertiary-color) !important;
+    color: var(--secondary-color);
 }
