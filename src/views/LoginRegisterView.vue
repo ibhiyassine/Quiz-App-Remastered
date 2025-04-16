@@ -7,5 +7,5 @@ import LoginForm from '@/components/LoginForm.vue'
 </template>
 
 <style scoped>
-/* Removed container styles to let LoginForm handle the layout */
+
 </style>
