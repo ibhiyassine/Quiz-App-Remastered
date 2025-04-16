@@ -3,8 +3,6 @@ import { RouterView } from 'vue-router'
 </script>
 
 <template>
-  <span class="material-icons" style="font-size: xx-large; color: blueviolet;">quiz</span>
-
   <RouterView />
 </template>
 
