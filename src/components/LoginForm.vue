@@ -49,7 +49,15 @@ const switchMode = () => {
 
 <template>
   <div class="page-container">
-    <div class="form-section">
+    <div class="d-flex flex-column align-items-center border-box">
+  <img src="../assets/logo2.png" class="rounded-circle m-4 image" width="250px" alt="Logo" />
+  <div class="main-title text-center">
+    <p>A <strong style="color: #d2601a;">Brilliant </strong> experience</p>  
+    <p>in every question</p>
+  </div>
+</div>
+    
+    <div class="form-section  ">
       <div class="auth-header">
         <div class="auth-tabs">
           <button 
@@ -57,14 +65,15 @@ const switchMode = () => {
             :class="{ active: !isLogin }"
             @click="router.push('/register')"
           >
-            Sign up
+          <span class="h6" >Sign up</span>
+            
           </button>
           <button 
             class="tab-btn" 
             :class="{ active: isLogin }"
             @click="router.push('/login')"
           >
-            Log in
+            <span class="h6" >Log in</span>
           </button>
         </div>
       </div>
@@ -91,7 +100,7 @@ const switchMode = () => {
           </button>
 
           <div class="divider">
-            <span>or email</span>
+            <span style="color:black">or email</span>
           </div>
 
           <template v-if="!isLogin">
@@ -135,8 +144,8 @@ const switchMode = () => {
 
           <div class="form-group">
             <div class="password-header">
-              <label>Password</label>
-              <a v-if="isLogin" href="#" class="forgot-link">Forgot password</a>
+              <label style="color: rgb(56, 56, 233);">Password</label>
+              <a v-if="isLogin" href="#" class="forgot-link"  >Forgot password</a>
             </div>
             <div class="password-input">
               <input
@@ -187,8 +196,8 @@ const switchMode = () => {
 
           <div class="terms-text">
             By clicking {{ isLogin ? 'Log in' : 'Sign up' }}, you accept Quizlet's
-            <a href="#" @click.prevent>Terms of Service</a> and
-            <a href="#" @click.prevent>Privacy Policy</a>
+            <a href="#" @click.prevent style="color: rgb(56, 56, 233);">Terms of Service</a> and
+            <a href="#" @click.prevent style="color: rgb(56, 56, 233);">Privacy Policy</a>
           </div>
 
           <button type="submit" class="submit-btn">
@@ -196,14 +205,17 @@ const switchMode = () => {
           </button>
 
           <button type="button" class="create-account-btn" @click="switchMode">
-            {{ isLogin ? 'New to Quizlet? Create an account' : 'Already have an account? Log in' }}
+            {{ isLogin ? 'New to Quizzy? Create an account' : 'Already have an account? Log in' }}
           </button>
 
-          <a href="#" class="magic-link">Log in with magic link</a>
         </form>
       </div>
     </div>
+    <div>
+         </div>
+
   </div>
+
 </template>
 
 <style scoped>
@@ -221,17 +233,18 @@ const switchMode = () => {
   left: 0;
   width: 50%;
   height: 100%;
-  background-image: url('@/assets/bg.jpg');
+  
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+ 
 }
 
 .form-section {
   position: relative;
   width: 50%;
   min-height: 100vh;
-  background-color: rgba(255, 255, 255, 0.98);
+  background-color: #1d3c45;
   display: flex;
   flex-direction: column;
   margin-left: auto;
@@ -239,7 +252,7 @@ const switchMode = () => {
 
 .auth-header {
   padding: 0.75rem 2rem;
-  border-bottom: 1px solid #d9dde8;
+  border-bottom: 2px solid #d2601a;
 }
 
 .auth-tabs {
@@ -252,14 +265,14 @@ const switchMode = () => {
   background: none;
   border: none;
   font-size: 0.9rem;
-  color: #586380;
+  color: white;
   cursor: pointer;
   padding: 0.5rem 0;
   position: relative;
 }
 
 .tab-btn.active {
-  color: #2e3856;
+  color: white;
   font-weight: 600;
 }
 
@@ -270,7 +283,7 @@ const switchMode = () => {
   left: 0;
   width: 100%;
   height: 2px;
-  background-color: #4255ff;
+  background-color: blue;
 }
 
 .login-container {
@@ -290,7 +303,7 @@ const switchMode = () => {
 
 .title {
   font-size: 2rem;
-  color: #2e3856;
+  color: white;
   font-weight: 700;
   line-height: 1.2;
   margin: 0;
@@ -300,6 +313,8 @@ const switchMode = () => {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  gap: 0.75rem;
+  width:130% ;
 }
 
 .social-btn {
@@ -352,6 +367,7 @@ const switchMode = () => {
   text-align: center;
   position: relative;
   margin: 0.75rem 0;
+  color:black
 }
 
 .divider::before,
@@ -399,7 +415,7 @@ const switchMode = () => {
 }
 
 .forgot-link {
-  color: #4255ff;
+  color: rgb(56, 56, 233);
   text-decoration: none;
   font-size: 0.75rem;
   font-weight: 500;
@@ -492,7 +508,7 @@ select option {
 
 .terms-text {
   font-size: 0.6875rem;
-  color: #586380;
+  color: white;
   text-align: center;
   margin: 0.75rem 0;
 }
@@ -504,12 +520,12 @@ select option {
 
 .submit-btn {
   width: 100%;
-  background-color: #4255ff;
+  background-color: #d2601a;
   color: white;
   padding: 0.625rem;
   border: none;
   border-radius: 6px;
-  font-size: 0.875rem;
+  font-size: 1.2rem;
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s;
@@ -580,6 +596,46 @@ select:invalid {
   color: #8f9299;
   opacity: 1;
 }
+.image {
+  display: block;
+  margin: 0 auto;
+  top: 175px;
+  
+  position: relative;
+}
+.main-title {
+ 
+ 
+  color: #1d3c45;
+  font-size: 2.8rem;
+  
+  
+  align-items: center;
+  margin-top: 175px;
+  margin-bottom: 25px;
+  letter-spacing: 1px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease-in-out;
+  
+  z-index: 1;
+ 
+}
+.main-title p{
+  text-align: center;
+  z-index: 2;
+  font-weight: bolder;
+
+}
+.border-box {
+  border: 2px solid black;
+  width: 50%;
+
+  padding-bottom: 20px;
+}
+
+
+
+
 </style>
 
 

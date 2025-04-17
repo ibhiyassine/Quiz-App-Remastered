@@ -1,6 +1,8 @@
+<script setup>
+import ProfileItem from '@/components/ProfileItem.vue';
+</script>
+
 <template>
-    <div>
-        <h1>User Profile</h1>
-        <p>Welcome, !</p>
-    </div>
+    
+    <ProfileItem />
 </template>
