@@ -5,6 +5,9 @@ import { get_date_string } from "../composables/dateString";
 import { RouterLink } from 'vue-router';
 import TopicTag from './TopicTag.vue';
 const props = defineProps({
+    id: {
+        type: String,
+    },
     name: {
         type: String,
         required: true,
@@ -32,11 +35,12 @@ const props = defineProps({
 });
 
 let count_questions = computed(() => {
+    console.log("Counting questions", props.questions.length);
     return props.questions.length;
 });
 
 let correct_answers = computed(() => {
-    return props.questions.filter(question => question == 0).length;
+    return props.questions.filter((question) => {return question == 0}).length;
 });
 
 let date_string = computed(() => {
@@ -48,7 +52,7 @@ watch(props, () => { }, { deep: true });
 
 <template>
     <RouterLink style="text-decoration: none;" :to="'/'">
-        <div class="d-flex flex-column gap-1 cardx border-5 border border-blue mx-3 my-2" id="compact" style="width: 42rem;">
+        <div class="d-flex flex-column gap-1 cardx border-5 border border-blue mx-2 my-1" id="compact" style="width: 34rem;">
             <div class="fs-4 fw-bold d-flex align-items-center"><span class="material-icons me-2 fs-2">style</span><span
                     class="fs-5 fw-bold">{{
                     name }}</span></div>
