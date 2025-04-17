@@ -3,6 +3,9 @@ import LoginRegisterView from '@/views/LoginRegisterView.vue'
 import ProfileView from '@/views/ProfileView.vue'
 import HomeView from '@/views/HomeView.vue'
 import LandingPage from '@/views/LandingPage.vue'
+import QuizView from '@/views/QuizView.vue'
+import TakeQuizView from '@/views/TakeQuizView.vue'
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
