@@ -4,10 +4,9 @@ export function get_date_string(date) {
     }
 
     const jsDate = new Date(date.seconds * 1000);
-    return jsDate.toLocaleString("fr-FR", {
-        weekday: "long",
+    return jsDate.toLocaleString("en-US", {
         day: "2-digit",
-        month: "long",
+        month: "numeric",
         year: "numeric",
         hour: "2-digit",
         minute: "2-digit",

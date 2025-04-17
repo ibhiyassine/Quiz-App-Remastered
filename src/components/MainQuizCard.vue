@@ -48,12 +48,12 @@ watch(props, () => {}, { deep: true });
         <RouterLink to="/" class="RouterLink">
             <div style="width: 30rem; height: 16rem;" class="cardx template d-flex flex-column">
                 <div class="d-flex justify-content-between">
-                    <div class="fs-4 fw-bold">{{ name }}</div>
+                    <div class="fs-5 fw-bold">{{ name }}</div>
                     <div>
-                        <span v-for="i in difficulty" class="material-icons">star</span>
+                        <span v-for="i in difficulty" :key="i" class="material-icons">star</span>
                     </div>
                 </div>
-                <div class="d-flex gap-1">
+                <div class="d-flex flex-wrap gap-1">
                     <TopicTag v-for="(topic, index) in topics" :key="index" :topic="topic"/>
                 </div>
                 <div class="mt-auto d-flex justify-content-between">
@@ -77,6 +77,6 @@ watch(props, () => {}, { deep: true });
     transform: translateY(-10px) scale(1.02);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
     border-bottom: 4px solid var(--secondary-color);
-    background-color: var(--hover-background-color);
+    background-color: white;
 }
 </style>
