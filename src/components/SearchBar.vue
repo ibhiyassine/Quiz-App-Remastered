@@ -4,6 +4,13 @@ import { getusers } from '@/composables/getUsers';
 import { getquizzes } from '@/composables/getQuiz';
 import SearchSuggestionItem from './SearchSuggestionItem.vue';
 
+const props=defineProps({
+  username: {
+    type: String,
+    default: 'ibhi'
+  }
+});
+
 const search=ref("");
 const suggestionsRef = ref(null);
 const inputref = ref(null);
@@ -49,7 +56,7 @@ const handleBlur = () => {
 </script>
 
 <template>
-  <div class="mx-3 rounded-1 bg-white z-1 search-bar-container" style="width: 40%; margin-top: 20px;">
+  <div class="mx-3 rounded-1 bg-white z-1 search-bar-container" style="width: 40%;">
     
     <div class="position-relative">
   <span class="material-icons position-absolute top-50 start-0 translate-middle-y ps-2 text-muted" style="color: black;">search</span>

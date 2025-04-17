@@ -33,7 +33,6 @@ onMounted(async () => {
 
 <template>
   <div>
-
     <NavSide>
       <div class="p-1">
         <div class="fs-2 text-blue fw-bold fst-italic text-decoration-underline">
