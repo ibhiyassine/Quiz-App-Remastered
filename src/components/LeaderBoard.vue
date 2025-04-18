@@ -16,7 +16,7 @@ const props = defineProps({
     userRank: {
         type: Number,
         required: false,
-        default: 1,
+        default: -1,
     },
     users: {
         type: Array,
@@ -54,7 +54,7 @@ watch(current_page, (newPage) => {
                     <div class="d-flex flex-column">
                         <div class="d-flex justify-content-between">
                             <div class="fs-5 p-3 text-blue fw-bold">Your Score: {{ userScore }}</div>
-                            <div class="fs-5 p-3 text-blue fw-bold">Ranked: {{ userRank }}</div>
+                            <div class="fs-5 p-3 text-blue fw-bold">{{(userRank != -1) ? `Ranked: ${userRank }` : 'Not ranked yet!'}}</div>
                         </div>
                     </div>
                 </div>

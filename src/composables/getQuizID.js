@@ -1,18 +1,46 @@
-import { getquizzes } from "@/composables/getQuiz.js";
+import { db } from "@/firebase";
+import { doc, getDoc } from "firebase/firestore";
 
 export async function getQuizID(quizId) {
-    const { quizzes, fetchQuizzes } = getquizzes();
-  
-    if (quizzes.value.length === 0) {
-      await fetchQuizzes();
-    }
-  
-    for (let quiz of quizzes.value) {
-      if(quiz.id==quizId){
-        console.log(quiz);
-          return quiz;
-      }
-    }
-    return "no id matched";
+    const docRef = doc(db, "quizzes", quizId);
+    const quiz = await getDoc(docRef);
+    let quizObj = {
+      id: quiz.id,
+      name: quiz.get("name"),
+      difficulty: quiz.get("difficulty"),
+      createdAt: quiz.get("createdAt"),
+      NumberOfQuestions: quiz.get("NumberOfQuestions"),
+      questions: quiz.get("questions"),
+      takenBy: quiz.get("takenBy"),
+      topics: quiz.get("topics"),
+    };
+    await getQuestions(quizObj);
+    await getUsers(quizObj);
+    return quizObj
   
   }
+async function getQuestions(quiz){
+  quiz.questions = await Promise.all(quiz.questions.map(async (question) => {
+    const quesRef = doc(db, "questions", question.id);
+    let questionObj = await getDoc(quesRef);
+    return {
+      answers: questionObj.get("answers"),
+      question: questionObj.get("question")
+    };
+  }));
+}
+
+async function getUsers(quiz){
+  quiz.takenBy = await Promise.all(quiz.takenBy.map(async (person) => {
+    const userRef = doc(db, "users", person.id);
+    let user = await getDoc(userRef);
+    for(let takenQuizzes of user.get("quizzes") ){
+      if(takenQuizzes.name.id == quiz.id){
+        return {
+          name: user.id,
+          score: takenQuizzes.score,
+        }
+      }
+    }
+  }));
+}
