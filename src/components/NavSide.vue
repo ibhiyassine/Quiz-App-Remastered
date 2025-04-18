@@ -15,7 +15,7 @@ function toggleSidebar() {
         class="border-bottom border-5 border-blue" />
 
     <transition name="slide">
-        <Sidebar v-if="barvisible" class="stickyside border-end border-top border-5 border-blue mt-3" />
+        <Sidebar v-if="barvisible" class="stickyside border-end border-top border-5 border-blue" />
     </transition>
     <main class="main-content d-flex flex-column gap-5" :class="{'margin': barvisible}">
         <slot />

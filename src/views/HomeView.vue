@@ -35,7 +35,7 @@ onMounted(async () => {
   <div>
     <NavSide>
       <div class="p-1">
-        <div class="fs-2 text-blue fw-bold fst-italic text-decoration-underline">
+        <div class="fs-2 page-title fw-bold">
           Your recently taken quizzes
         </div>
         <div v-if="userLatest.length == 0">
@@ -48,7 +48,7 @@ onMounted(async () => {
         </div>
       </div>
       <div>
-        <div class="fs-2 text-blue fw-bold fst-italic text-decoration-underline">
+        <div class="fs-2 page-title fw-bold">
           Latest Quizzes
         </div>
         <div>
@@ -56,7 +56,7 @@ onMounted(async () => {
         </div>
       </div>
       <div>
-        <div class="fs-2 text-blue fw-bold fst-italic text-decoration-underline">
+        <div class="fs-2 page-title fw-bold">
           Wanna know what the others are up to?
         </div>
         <div>
@@ -74,5 +74,11 @@ onMounted(async () => {
 }
 .text-blue {
   color: var(--secondary-color);
+}
+.page-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: #454f57;
 }
 </style>
