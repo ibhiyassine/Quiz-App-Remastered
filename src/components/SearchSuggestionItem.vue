@@ -13,7 +13,7 @@ const props = defineProps({
     },
     username: {
         type: String,
-        default: "Aya"
+        default: "saad"
     },
     quizId: {
         type: String,

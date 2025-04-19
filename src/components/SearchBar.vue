@@ -4,28 +4,28 @@ import { getusers } from '@/composables/getUsers';
 import { getquizzes } from '@/composables/getQuiz';
 import SearchSuggestionItem from './SearchSuggestionItem.vue';
 
-const props=defineProps({
+const props = defineProps({
   username: {
     type: String,
     default: 'ibhi'
   }
 });
 
-const search=ref("");
+const search = ref("");
 const suggestionsRef = ref(null);
 const inputref = ref(null);
 const cliick = ref(false);
 
 const { users, fetchUsers } = getusers();
 onMounted(async () => {
-  await fetchUsers().then(()=>{
+  await fetchUsers().then(() => {
     console.log("users:", users.value[0]);
   })
 });
 
-const {quizzes, fetchQuizzes} = getquizzes();
+const { quizzes, fetchQuizzes } = getquizzes();
 onMounted(async () => {
-  await fetchQuizzes().then(()=>{
+  await fetchQuizzes().then(() => {
     console.log("quizzes:", quizzes.value);
   })
 });
@@ -57,30 +57,34 @@ const handleBlur = () => {
 
 <template>
   <div class="mx-3 rounded-1 bg-white z-1 search-bar-container" style="width: 40%;">
-    
-    <div class="position-relative">
-  <span class="material-icons position-absolute top-50 start-0 translate-middle-y ps-2 text-muted" style="color: black;">search</span>
-  <input class="form-control ps-5 rounded border-0" type="text" placeholder="Search Quizzy" style="height: 50px;" v-model="search"
-  ref="inputref" @focus="cliick = true" @blur="handleBlur" @input="cliick = search_field.trim().length > 0" />
-</div>
 
-  <div v-show="search.trim().length > 0 && cliick" :ref="suggestionsRef"
-      class="shadow-lg rounded mt-2 p-2 suggestion-item">
-      
+    <div class="position-relative">
+      <span class="material-icons position-absolute top-50 start-0 translate-middle-y ps-2 text-muted"
+        style="color: black;">search</span>
+      <input class="form-control ps-5 rounded border-0" type="text" placeholder="Search Quizzy" style="height: 50px;"
+        v-model="search" ref="inputref" @focus="cliick = true" @blur="handleBlur"
+        @input="cliick = search_field.trim().length > 0" />
+    </div>
+
+    <div v-show="search.trim().length > 0 && cliick" :ref="suggestionsRef"
+      class="shadow-lg rounded mt-2 p-2 suggestion-item overflow-y-scroll" style="max-height: 450px;">
+
       <div v-if="filteredUsers.length">
         <h6 class="text-muted px-2 ">Users</h6>
-        <SearchSuggestionItem v-for="(user, index) in filteredUsers" :key="index" :value="user.username" type="User" />
+        <SearchSuggestionItem v-for="(user, index) in filteredUsers" :key="index" :value="user.username"
+          :username="user.username" type="User" />
       </div>
 
       <div v-if="matchedQuizzes.length">
         <h6 class="text-muted px-2 ">Quizzes</h6>
-        <SearchSuggestionItem v-for="(quiz, index) in matchedQuizzes" :key="index" :value="quiz.name" :quiz-id="quiz.id" type="Quiz" />
+        <SearchSuggestionItem v-for="(quiz, index) in matchedQuizzes" :key="index" :value="quiz.name" :quiz-id="quiz.id"
+          type="Quiz" />
       </div>
 
     </div>
-    </div>
-  
-  
+  </div>
+
+
 </template>
 
 <style scoped>
@@ -98,15 +102,13 @@ input[type="text"] {
 }
 
 input[type="text"]:focus {
-  
+
   background-color: white;
   color: black;
   font-weight: 500;
-  border: 2px solid #1d3c45; 
+  border: 2px solid #1d3c45;
   outline: none;
-  box-shadow: 0 0 0 0.25rem #1d3c45; 
+  box-shadow: 0 0 0 0.25rem #1d3c45;
 
 }
-
-
 </style>

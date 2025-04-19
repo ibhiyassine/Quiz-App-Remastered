@@ -16,31 +16,25 @@ const props = defineProps({
     */
     id: {
         type: String,
-        required: true,
     },
     name: {
         type: String,
-        required: true,
         default: 'Default Name'
     },
     difficulty: {
         type: Number,
-        required: true,
         default: 2,
     },
     topics: {
         type: Array,
-        required: true,
         default: () => ['Array', 'of', 'Topics'],
     },
     questions: {
         type: Array,
-        required: true,
         default: () => ['Array', 'of', 'Questions'],
     },
     createdAt: {
         type: Timestamp,
-        required: true,
     },
 });
 

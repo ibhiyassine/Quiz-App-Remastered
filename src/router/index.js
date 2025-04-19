@@ -36,7 +36,7 @@ const router = createRouter({
     },
     {
       path: '/profile/:username',
-      name: 'Profile',
+      name: 'profile',
       component: ProfileView
     },
     {
@@ -82,7 +82,7 @@ router.beforeEach((to, from, next) => {
               next({ name: "LandingPage" });
           }
       });
-  } else if ((to.name === "Profile") && !isAuthenticated) {
+  } else if ((to.name === "profile") && !isAuthenticated) {
       // Wait for Firebase to initialize auth state
       auth.onAuthStateChanged((user) => {
           if (user) {

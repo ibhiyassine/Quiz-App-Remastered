@@ -1,52 +1,68 @@
 <script setup>
 import NavSide from '@/components/NavSide.vue';
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { getUserquizzes } from "@/composables/getUserQuizzes";
+import { getUserquizzes } from "@/composables/getUserquizzes"; // Fixed case sensitivity
 import ComapctQuizCard from '@/components/ComapctQuizCard.vue';
 import LeaderBoard from '@/components/LeaderBoard.vue';
 import { getUserLatest } from '@/composables/getUserLatest';
 import { getGlobalScores } from '@/composables/getGlobalScores';
+import { authStateListener } from '@/composables/authStateListener';
 
+const router = useRouter();
+const route = useRoute();
 
 let users = ref([]);
 let userScore = ref([]);
 let userRank = ref([]);
 
 let userLatest = ref([]);
-
-function toggleSidebar() {
-  barvisible.value = !barvisible.value
+let user = ref('');
+function defineUser(u){
+  user.value = u.displayName;
 }
 
-onMounted(async () => {
-  let out = await getGlobalScores(route.params.username);
+// Define username as reactive reference from route params
+const username = ref(route.params.username);
+
+// Function to load all profile data
+async function loadProfileData() {
+  // Load global scores
+  let out = await getGlobalScores(username.value);
   users.value = out.users;
   userScore.value = out.userScore;
   userRank.value = out.userRank;
-  userLatest.value = await getUserLatest(route.params.username);
-  console.log("userLatest", userLatest.value);
+  
+  // Load user's latest quizzes
+  userLatest.value = await getUserLatest(username.value);
+  
+  // Load user's taken quizzes
+  result.value = await getUserquizzes(username.value);
+  console.log("User quizzes loaded", result.value);
+}
+
+onMounted(async () => {
+  await authStateListener(defineUser);
+  await loadProfileData();
 })
-const route = useRoute();
 
-const username = route.params.username;
-
+// Watch for route params changes to reload data when navigating between profiles
+watch(() => route.params.username, async (newUsername) => {
+  if (newUsername) {
+    username.value = newUsername;
+    await loadProfileData();
+  }
+}, { immediate: true });
 
 const result = ref([]);
-onMounted(async () => {
-        result.value = await getUserquizzes(username);
-        console.log("aaa", result.value);
-});
-
-
 </script>
 
 <template>
         <div>
-            <NavSide :username="username" :inprofile="true">
+            <NavSide :username="username" :inprofile="username == user">
             <div v-if="result.length!=0" class="p-1">
                 <div class="fs-4 text-blue fw-bold fst-italic text-decoration-underline">
-                Your taken quizzes
+                {{ (username == user) ? 'Your taken quizzes' : `${username}'s taken quizzes` }}
                 </div>
                     <div v-if="result.length === 0" class="text-danger p-2">
                         No quizzes found for this user.
@@ -67,9 +83,4 @@ onMounted(async () => {
             </NavSide>
 
         </div>
-    
-    
-    
-   
-    
 </template>

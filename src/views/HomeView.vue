@@ -1,5 +1,5 @@
 <script setup>
-import { onBeforeMount, onMounted, ref } from 'vue'
+import { onBeforeMount, onMounted, ref, watch } from 'vue'
 import { getGlobalScores } from '@/composables/getGlobalScores'
 import { getUserLatest } from '@/composables/getUserLatest'
 import { useRoute, useRouter} from 'vue-router'
@@ -11,29 +11,23 @@ import { authStateListener } from '@/composables/authStateListener'
 const route = useRoute();
 const router = useRouter();
 
-const barvisible = ref(true)
-
-
 let userLatest = ref([]);
 
 let user = ref('');
 
-function toggleSidebar() {
-  barvisible.value = !barvisible.value
-}
-
-function checkRoute(u){
+let checkRoute = async (u) => {
+  console.log(u, "u")
   user.value = u.displayName;
-}
-
-
-onBeforeMount(async () => {
-  await authStateListener(checkRoute);
-});
+};
 
 onMounted(async () => {
-  userLatest.value = await getUserLatest(user.value);
+  await authStateListener(checkRoute);
+  console.log(user.value);
 })
+watch(user, async () => {
+  userLatest.value = await getUserLatest(user.value);
+  console.log("got userlatest", userLatest.value);
+});
 </script>
 
 <template>

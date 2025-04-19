@@ -78,6 +78,12 @@ watch(current_page, (newPage) => {
 </template>
 
 <style scoped>
+.sticky-top {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
 .border-blue {
     border-color: var(--secondary-color) !important;
 }
