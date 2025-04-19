@@ -19,7 +19,7 @@ export async function getQuizID(quizId) {
     return quizObj
   
   }
-async function getQuestions(quiz){
+export async function getQuestions(quiz){
   quiz.questions = await Promise.all(quiz.questions.map(async (question) => {
     const quesRef = doc(db, "questions", question.id);
     let questionObj = await getDoc(quesRef);
