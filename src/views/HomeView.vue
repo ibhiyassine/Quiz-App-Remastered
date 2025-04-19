@@ -1,33 +1,38 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onBeforeMount, onMounted, ref } from 'vue'
 import { getGlobalScores } from '@/composables/getGlobalScores'
 import { getUserLatest } from '@/composables/getUserLatest'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter} from 'vue-router'
 import ComapctQuizCard from '@/components/ComapctQuizCard.vue'
 import QuizCarousel from '@/components/QuizCarousel.vue'
-import LeaderBoard from '@/components/LeaderBoard.vue';
 import NavSide from '@/components/NavSide.vue'
+import { authStateListener } from '@/composables/authStateListener'
 
 const route = useRoute();
+const router = useRouter();
 
 const barvisible = ref(true)
-let users = ref([]);
-let userScore = ref([]);
-let userRank = ref([]);
+
 
 let userLatest = ref([]);
+
+let user = ref('');
 
 function toggleSidebar() {
   barvisible.value = !barvisible.value
 }
 
+function checkRoute(u){
+  user.value = u.displayName;
+}
+
+
+onBeforeMount(async () => {
+  await authStateListener(checkRoute);
+});
+
 onMounted(async () => {
-  let out = await getGlobalScores(route.params.username);
-  users.value = out.users;
-  userScore.value = out.userScore;
-  userRank.value = out.userRank;
-  userLatest.value = await getUserLatest(route.params.username);
-  console.log("userLatest", userLatest.value);
+  userLatest.value = await getUserLatest(user.value);
 })
 </script>
 
@@ -48,9 +53,14 @@ onMounted(async () => {
         </div>
       </div>
       <div>
+      <div class="d-flex justify-content-between align-items-center">
         <div class="fs-2 page-title fw-bold">
           Latest Quizzes
         </div>
+        <div>
+          <RouterLink to="/quiz" class="fs-6 fw-bold page-link">Show all quizzes</RouterLink>
+        </div>
+      </div>
         <div>
           <QuizCarousel />
         </div>
@@ -73,5 +83,15 @@ onMounted(async () => {
   font-weight: 700;
   margin-bottom: 2rem;
   color: #454f57;
+}
+.page-link{
+  color: #454f57;
+  background-color: transparent;
+  border: none;
+  transition: all ease 0.5s;
+}
+.page-link:hover{
+  text-decoration: underline;
+  transform: scale(1.05);
 }
 </style>

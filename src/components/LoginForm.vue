@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth"
+import { getAuth, createUserWithEmailAndPassword, updateProfile, } from "firebase/auth"
 import { checkUsername, addUsername } from '@/composables/createNewUser'
 import { loginUser } from '@/composables/UserLogin'
 
@@ -26,29 +26,36 @@ const switchMode = () => {
   }
 }
 
-async function submitLogReg(){
-  if(isLogin.value){
-    await loginUser(email.value, password.value);
+async function submitLogReg() {
+  if (!username.value || !password.value || (!isLogin && !email.value)) {
+    errorMessage.value = "Please fill the form correctly"
+    return;
   }
-  else{
-    if(await checkUsername(username.value)){
-      
+  if (isLogin.value) {
+
+    errorMessage.value = await loginUser(username.value, password.value);
+    router.replace(`/home`);
+  }
+  else {
+    if (await checkUsername(username.value)) {
+
       createUserWithEmailAndPassword(auth, email.value, password.value)
-    .then((userCredential) => {
-      // Signed up 
-      const user = userCredential.user;
-      console.log("User created", user);
-      // ...
-    })
-    .catch((error) => {
-      errorMessage.value = error.message;
-      console.log("Error in creating user", errorMessage.value);
-      // ..
-    });
-    await addUsername(username.value, email.value);
-    router.replace(`/home/${username.value}`);
+        .then(async (userCredential) => {
+          // Signed up 
+          const user = userCredential.user;
+          await updateProfile(user, { displayName: username.value });
+          console.log("User created", user);
+          await addUsername(username.value, email.value);
+          router.replace(`/home`);
+          // ...
+        })
+        .catch((error) => {
+          errorMessage.value = error.message;
+          console.log("Error in creating user", errorMessage.value);
+          // ..
+        });
     }
-    else{
+    else {
       errorMessage.value = "username already exists";
     }
   }
@@ -58,34 +65,26 @@ async function submitLogReg(){
 <template>
   <div class="page-container">
     <div class="d-flex flex-column align-items-center border-box">
-  <img src="../assets/logo2.png" class="rounded-circle m-4 image" width="250px" alt="Logo" />
-  <div class="main-title text-center">
-    <p>A <strong style="color: #d2601a;">Brilliant </strong> experience</p>  
-    <p>in every question</p>
-  </div>
-</div>
-    
+      <img src="../assets/logo2.png" class="rounded-circle m-4 image" width="250px" alt="Logo" />
+      <div class="main-title text-center">
+        <p>A <strong style="color: #d2601a;">Brilliant </strong> experience</p>
+        <p>in every question</p>
+      </div>
+    </div>
+
     <div class="form-section  ">
       <div class="auth-header">
         <div class="auth-tabs">
-          <button 
-            class="tab-btn" 
-            :class="{ active: !isLogin }"
-            @click="router.push('/register')"
-          >
-          <span class="h6" >Sign up</span>
-            
+          <button class="tab-btn" :class="{ active: !isLogin }" @click="router.push('/register')">
+            <span class="h6">Sign up</span>
+
           </button>
-          <button 
-            class="tab-btn" 
-            :class="{ active: isLogin }"
-            @click="router.push('/login')"
-          >
-            <span class="h6" >Log in</span>
+          <button class="tab-btn" :class="{ active: isLogin }" @click="router.push('/login')">
+            <span class="h6">Log in</span>
           </button>
         </div>
       </div>
-      
+
       <div class="login-container">
         <div class="form-header">
           <h1 class="title">Smash sets in<br>your sweats.</h1>
@@ -98,77 +97,40 @@ async function submitLogReg(){
           </button>
 
           <div class="divider">
-            <span style="color:var(--primary-color)" class="fs-5 fw-bold bg-transparent text-center">or email</span >
+            <span style="color:var(--primary-color)" class="fs-5 fw-bold bg-transparent text-center">or email</span>
           </div>
 
-          <template v-if="!isLogin">
 
-            <div class="form-group">
-              <input
-                type="text"
-                v-model="username"
-                placeholder="Username"
-                required
-              />
-            </div>
-          </template>
 
           <div class="form-group">
             <label>Email</label>
-            <input
-              type="email"
-              v-model="email"
-              placeholder="Enter your email address or username"
-              required
-            />
+            <input type="text" v-model="username" placeholder="Enter your username" required />
           </div>
+          <template v-if="!isLogin">
 
+            <div class="form-group">
+              <input type="email" v-model="email" placeholder="Enter your email" required />
+            </div>
+          </template>
           <div class="form-group">
             <div class="password-header">
               <label style="color: var(--primary-color);">Password</label>
             </div>
             <div class="password-input">
-              <input
-                :type="showPassword ? 'text' : 'password'"
-                v-model="password"
-                placeholder="Enter your password"
-                required
-              />
-              <button 
-                type="button" 
-                class="toggle-password"
-                @click="showPassword = !showPassword"
-                :aria-label="showPassword ? 'Hide password' : 'Show password'"
-              >
-                <svg 
-                  v-if="!showPassword" 
-                  xmlns="http://www.w3.org/2000/svg" 
-                  width="20" 
-                  height="20" 
-                  viewBox="0 0 24 24" 
-                  fill="none" 
-                  stroke="currentColor" 
-                  stroke-width="2" 
-                  stroke-linecap="round" 
-                  stroke-linejoin="round"
-                >
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                  <circle cx="12" cy="12" r="3"/>
+              <input :type="showPassword ? 'text' : 'password'" v-model="password" placeholder="Enter your password"
+                required />
+              <button type="button" class="toggle-password" @click="showPassword = !showPassword"
+                :aria-label="showPassword ? 'Hide password' : 'Show password'">
+                <svg v-if="!showPassword" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                  fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                  <circle cx="12" cy="12" r="3" />
                 </svg>
-                <svg 
-                  v-else 
-                  xmlns="http://www.w3.org/2000/svg" 
-                  width="20" 
-                  height="20" 
-                  viewBox="0 0 24 24" 
-                  fill="none" 
-                  stroke="currentColor" 
-                  stroke-width="2" 
-                  stroke-linecap="round" 
-                  stroke-linejoin="round"
-                >
-                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
-                  <line x1="1" y1="1" x2="23" y2="23"/>
+                <svg v-else xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path
+                    d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+                  <line x1="1" y1="1" x2="23" y2="23" />
                 </svg>
               </button>
             </div>
@@ -194,7 +156,7 @@ async function submitLogReg(){
       </div>
     </div>
     <div>
-         </div>
+    </div>
 
   </div>
 
@@ -215,11 +177,11 @@ async function submitLogReg(){
   left: 0;
   width: 50%;
   height: 100%;
-  
+
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
- 
+
 }
 
 .form-section {
@@ -296,7 +258,7 @@ async function submitLogReg(){
   flex-direction: column;
   gap: 0.75rem;
   gap: 0.75rem;
-  width:130% ;
+  width: 130%;
 }
 
 .social-btn {
@@ -349,7 +311,7 @@ async function submitLogReg(){
   text-align: center;
   position: relative;
   margin: 0.75rem 0;
-  color:black;
+  color: black;
 }
 
 .divider::before,
@@ -578,36 +540,40 @@ select:invalid {
   color: #8f9299;
   opacity: 1;
 }
+
 .image {
   display: block;
   margin: 0 auto;
   top: 175px;
-  
+
   position: relative;
 }
+
 .main-title {
- 
- 
+
+
   color: #1d3c45;
   font-size: 2.8rem;
-  
-  
+
+
   align-items: center;
   margin-top: 175px;
   margin-bottom: 25px;
   letter-spacing: 1px;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.08);
   transition: all 0.3s ease-in-out;
-  
+
   z-index: 1;
- 
+
 }
-.main-title p{
+
+.main-title p {
   text-align: center;
   z-index: 2;
   font-weight: bolder;
 
 }
+
 .border-box {
   border: 2px solid black;
   width: 50%;

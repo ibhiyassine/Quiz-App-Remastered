@@ -43,7 +43,7 @@ onMounted(async () => {
 
 <template>
         <div>
-            <NavSide :username="username">
+            <NavSide :username="username" :inprofile="true">
             <div v-if="result.length!=0" class="p-1">
                 <div class="fs-4 text-blue fw-bold fst-italic text-decoration-underline">
                 Your taken quizzes

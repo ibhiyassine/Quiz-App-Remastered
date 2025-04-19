@@ -1,16 +1,24 @@
 <script setup>
 import SearchBar from './SearchBar.vue';
 import UserInfo from './UserInfo.vue';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from "vue-router";
+import { authStateListener } from '@/composables/authStateListener';
 
 const route = useRoute();
 const router = useRouter();
-const username = route.params.username;
-console.log("ibhi", username);
+let username = ref('');
+
+function defineUsername(u){
+  username.value = u.displayName;
+}
 
 const emit = defineEmits(['toggleSidebar']);
 const see = ref(false);
+
+onMounted(async () => {
+  await authStateListener(defineUsername);
+})
 </script>
 
 <template>
@@ -22,7 +30,7 @@ const see = ref(false);
         <span class="material-icons" style="font-size: 40px; cursor: pointer;" @click="$emit('toggleSidebar')">
           menu
         </span>
-        <router-link :to="`/home/${username}`">
+        <router-link to="/home">
           <img src="../assets/logo2.png" class="rounded-circle" width="75px" alt="Logo" />
         </router-link>
         <search-bar />

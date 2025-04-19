@@ -74,7 +74,7 @@ const handleBlur = () => {
 
       <div v-if="matchedQuizzes.length">
         <h6 class="text-muted px-2 ">Quizzes</h6>
-        <SearchSuggestionItem v-for="(quiz, index) in matchedQuizzes" :key="index" :value="quiz.name" type="Quiz" />
+        <SearchSuggestionItem v-for="(quiz, index) in matchedQuizzes" :key="index" :value="quiz.name" :quiz-id="quiz.id" type="Quiz" />
       </div>
 
     </div>
