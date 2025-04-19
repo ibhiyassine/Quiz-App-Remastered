@@ -33,9 +33,9 @@ onMounted(async () => {
 
 <template>
   <div>
-    <NavSide>
+    <NavSide :inprofile="false">
       <div class="p-1">
-        <div class="fs-2 text-blue fw-bold fst-italic text-decoration-underline">
+        <div class="fs-4 text-blue fw-bold fst-italic text-decoration-underline">
           Your recently taken quizzes
         </div>
         <div v-if="userLatest.length == 0">
@@ -48,21 +48,15 @@ onMounted(async () => {
         </div>
       </div>
       <div>
-        <div class="fs-2 text-blue fw-bold fst-italic text-decoration-underline">
+        
+        <div class="fs-4 text-blue fw-bold fst-italic text-decoration-underline">
           Latest Quizzes
         </div>
         <div>
           <QuizCarousel />
         </div>
       </div>
-      <div>
-        <div class="fs-2 text-blue fw-bold fst-italic text-decoration-underline">
-          Wanna know what the others are up to?
-        </div>
-        <div>
-          <LeaderBoard class="mb-3" :users="users" :userRank="userRank" :userScore="userScore"/>
-        </div>
-      </div>
+      
     </NavSide>
   </div>
 </template>

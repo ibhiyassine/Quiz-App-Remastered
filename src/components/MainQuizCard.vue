@@ -46,9 +46,9 @@ watch(props, () => {}, { deep: true });
 <template>
     <div>
         <RouterLink to="/" class="RouterLink">
-            <div style="width: 30rem; height: 16rem;" class="cardx template d-flex flex-column">
+            <div style="width: 30rem; height: 16rem; gap: 18px;" class="cardx template d-flex flex-column">
                 <div class="d-flex justify-content-between">
-                    <div class="fs-5 fw-bold">{{ name }}</div>
+                    <div class="fs-6 fw-bold">{{ name }}</div>
                     <div>
                         <span v-for="i in difficulty" :key="i" class="material-icons">star</span>
                     </div>

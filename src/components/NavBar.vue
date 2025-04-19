@@ -14,7 +14,7 @@ const see = ref(false);
 </script>
 
 <template>
-  <div class="navbar-wrapper border-bottom border-5 border-blue position-relative">
+  <div class="navbar-wrapper border-bottom border-5 border-blue sticky-top">
     <div class="navbar navbar-expand d-flex justify-content-between align-items-center">
 
       

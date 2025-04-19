@@ -9,7 +9,7 @@ const props = defineProps({
 </script>
 
 <template>
-    <div class="rounded-pill d-inline px-2 py-1 tag">
+    <div class="rounded-pill d-inline px-2 py-1 tag h-6">
         {{ topic }}
     </div>
 </template>
@@ -17,10 +17,10 @@ const props = defineProps({
 <style scoped>
 .tag{
     color: var(--secondary-color);
-    color: rgb(107, 157, 172);
+    color: #fff1e1;
     border: solid 1px var(--secondary-color);
     background-color: rgba(29, 60, 69, 1);
-    font-size: 1rem;
+    font-size: 0.9rem;
     text-align: center;
 }
 </style>

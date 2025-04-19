@@ -1,7 +1,25 @@
 <script setup>
-import { ref } from 'vue';
+import { ref,defineProps } from 'vue';
 import NavBar from './NavBar.vue';
 import Sidebar from './optionsItem.vue';
+
+const props=defineProps({
+    notadmin:{
+        type: Boolean,
+        required: true,
+        default: true
+    },
+    inprofile:{
+        type: Boolean,
+        required: true,
+        default: true
+    },
+    username:{
+        type: String,
+        required: true,
+        default: "ibhi"
+    }
+})
 
 const barvisible = ref(true);
 
@@ -11,16 +29,25 @@ function toggleSidebar() {
 </script>
 
 <template>
-    <NavBar @toggleSidebar="toggleSidebar" style="position:sticky; top:0; z-index: 2;"
-        class="border-bottom border-5 border-blue" />
-
+    <NavBar @toggleSidebar="toggleSidebar" style="position:sticky; top:0; z-index: 2;" class="border-bottom border-5 border-blue" />
+  
     <transition name="slide">
-        <Sidebar v-if="barvisible" class="stickyside border-end border-top border-5 border-blue mt-3" />
+      <Sidebar
+        :notadmin="notadmin"
+        :inprofile="inprofile"
+        :username="username"
+        v-if="barvisible"
+        @showForm="(n) => $emit('showForm', n)" 
+       
+        class="stickyside border-end border-top border-5 border-blue"
+      />
     </transition>
-    <main class="main-content d-flex flex-column gap-5" :class="{'margin': barvisible}">
-        <slot />
+  
+    <main class="main-content d-flex flex-column gap-5" :class="{ 'margin': barvisible }">
+      <slot />
     </main>
-</template>
+  </template>
+  
 
 <style scoped>
 .stickyside{
