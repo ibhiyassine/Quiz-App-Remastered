@@ -6,13 +6,11 @@ import Sidebar from './optionsItem.vue';
 const props=defineProps({
     notadmin:{
         type: Boolean,
-        required: true,
         default: true
     },
     inprofile:{
         type: Boolean,
-        required: true,
-        default: true
+        default: false
     },
     username:{
         type: String,

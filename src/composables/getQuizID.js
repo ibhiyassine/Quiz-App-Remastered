@@ -43,4 +43,5 @@ async function getUsers(quiz){
       }
     }
   }));
+  quiz.takenBy.sort((a, b) => b.score - a.score);
 }

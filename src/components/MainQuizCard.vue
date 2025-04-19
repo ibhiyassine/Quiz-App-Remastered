@@ -5,29 +5,36 @@ import { get_date_string } from "../composables/dateString";
 import { RouterLink } from 'vue-router';
 import TopicTag from './TopicTag.vue';
 const props = defineProps({
+    /*
+    id: data.id,
+    name: data.get("name"),
+    createdAt: data.get("createdAt"),
+    difficulty: data.get("difficulty"),
+    topics: data.get("topics"),
+    questions: data.get("questions"),
+    takenBy: data.get("takenBy"),
+    */
+    id: {
+        type: String,
+    },
     name: {
         type: String,
-        required: true,
-        default: 'Default Name' 
+        default: 'Default Name'
     },
     difficulty: {
         type: Number,
-        required: true,
-        default: 2, 
+        default: 2,
     },
     topics: {
         type: Array,
-        required: true,
-        default: () => ['Array', 'of', 'Topics'], 
+        default: () => ['Array', 'of', 'Topics'],
     },
     questions: {
         type: Array,
-        required: true,
-        default: () => ['Array', 'of', 'Questions'], 
+        default: () => ['Array', 'of', 'Questions'],
     },
     createdAt: {
         type: Timestamp,
-        required: true,
     },
 });
 
@@ -39,13 +46,13 @@ let date_string = computed(() => {
     return get_date_string(props.createdAt);
 });
 
-watch(props, () => {}, { deep: true });
+watch(props, () => { }, { deep: true });
 
 </script>
 
 <template>
     <div>
-        <RouterLink to="/" class="RouterLink">
+        <RouterLink :to="`/quiz/${id}`" class="RouterLink">
             <div style="width: 30rem; height: 16rem; gap: 18px;" class="cardx template d-flex flex-column">
                 <div class="d-flex justify-content-between">
                     <div class="fs-6 fw-bold">{{ name }}</div>
@@ -54,7 +61,7 @@ watch(props, () => {}, { deep: true });
                     </div>
                 </div>
                 <div class="d-flex flex-wrap gap-1">
-                    <TopicTag v-for="(topic, index) in topics" :key="index" :topic="topic"/>
+                    <TopicTag v-for="(topic, index) in topics" :key="index" :topic="topic" />
                 </div>
                 <div class="mt-auto d-flex justify-content-between">
                     <div class="fw-bold">{{ count_questions }} questions</div>
@@ -66,9 +73,10 @@ watch(props, () => {}, { deep: true });
 </template>
 
 <style scoped>
-.RouterLink{
+.RouterLink {
     text-decoration: none;
 }
+
 .template {
     transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, border-bottom 0.3s ease-in-out, background-color 0.3s ease-in-out;
 }

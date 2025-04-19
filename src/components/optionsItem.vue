@@ -23,6 +23,7 @@ const props = defineProps({
   }
 })
 const router= useRouter();
+const route = useRoute();
 const handleDelete = async () => {
   const confirmed = confirm(`Are you sure you want to delete "${props.username}"?`);
   if (confirmed) {
@@ -41,7 +42,7 @@ const handleDelete = async () => {
   <div class="sidebar border-end border-5 border-blue">
     
     <div class="row">
-<router-link :to="`/home/${username}`" class="sidebar-link fx-w d-flex gap-4 text-decoration-none align-items-center" style="color: #d2601a; background-color: #1d3c45; height: 50px; padding: 10px; border-radius: 5px;font-size: 23px;font-weight: bold;">        
+<router-link :to="`/home`" class="sidebar-link fx-w d-flex gap-4 text-decoration-none align-items-center" style="color: #d2601a; background-color: #1d3c45; height: 50px; padding: 10px; border-radius: 5px;font-size: 23px;font-weight: bold;">        
   <span class="material-icons  " style="font-size: 30px;">
         home
         </span> Home
@@ -57,7 +58,7 @@ const handleDelete = async () => {
       </router-link>
     </div>
 
-    <div class="dropdown"  v-show="inprofile">
+    <div class="dropdown"  v-show="inprofile && username == route.params.username">
       <div class="btn btn-secondary dropdown-toggle d-flex gap-4 text-decoration-none align-items-center h4" style="color: #d2601a; background-color: #1d3c45; height: 50px; padding: 10px; border-radius: 5px; font-size: 23px;font-weight: bold; width: 230px; position: relative; right:12px"  role="button" data-bs-toggle="dropdown" >
           <span class="material-icons" style="font-size: 30px;">
             settings

@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 let props = defineProps({
     questions: {
         type: Array,
@@ -19,29 +19,23 @@ let props = defineProps({
 
 let question_count = ref(0);
 let current_question = ref(1);
-let answers  = ref([]);
-let response_count = computed(() => {
-    try{
-        return props.questions[current_question.value - 1].answers.length;
+let answers = ref([]);
+let permutation = [];
+let response_count = ref(1);
+function show_ans(i) {
+    try {
+        let permutedIndex = permutation[i - 1];
+        return props.questions[current_question.value - 1].answers[permutedIndex];
     }
-    catch(e){
-
-        return 1;
-    }
-});
-function show_ans(i){
-    try{
-        return props.questions[current_question.value - 1].answers[i - 1];
-    }
-    catch(e){
+    catch (e) {
         return '';
     }
 }
-function show_ques(){
-    try{
+function show_ques() {
+    try {
         return props.questions[current_question.value - 1].question;
     }
-    catch(e){
+    catch (e) {
         return '';
     }
 }
@@ -49,10 +43,29 @@ function show_ques(){
 let selected = ref(-1);
 watch(props, () => {
     question_count.value = props.NumberOfQuestions;
-    for(let i in question_count.value){
-        answers.value.push(-1); 
+    answers.value = Array(question_count.value).fill(-1);
+    try {
+        response_count.value = props.questions[current_question.value - 1].answers.length;
     }
- }, {deep: true});
+    catch (e) {
+
+        response_count.value = 1;
+    }
+    permutation = Array.from({ length: response_count.value }, (_, index) => index);
+    permutation = permutation.sort(() => Math.random() - 0.5);
+}, { deep: true });
+watch(current_question, (newValue) => {
+    try {
+        response_count.value = props.questions[newValue - 1].answers.length;
+    }
+    catch (e) {
+
+        response_count.value = 1;
+    }
+    permutation = Array.from({ length: response_count.value }, (_, index) => index);
+    permutation = permutation.sort(() => Math.random() - 0.5);
+
+});
 watch(selected, () => { });
 </script>
 
@@ -74,23 +87,24 @@ watch(selected, () => { });
             <div class="text-center border rounded border-3 border-blue p-1 fs-6 fw-bold baground-orange question">
                 {{ show_ques() }}
             </div>
-            <div v-for="i in response_count" :key="i" :class="{ 'baground-orange-primary': answers[current_question - 1] == i }"
+            <div v-for="i in response_count" :key="i"
+                :class="{ 'baground-orange-primary': answers[current_question - 1] == permutation[i - 1] }"
                 class="p-3 baground-orange border border-3 border-blue answer rounded-pill mt-3 fw-bold d-flex align-items-center"
-                @click="answers[current_question - 1] = i">
+                @click="answers[current_question - 1] = permutation[i - 1]">
                 <span class="material-icons me-1">lightbulb</span> {{ show_ans(i) }}
             </div>
             <!--Here we put the next and prev buttons-->
             <div class="d-flex justify-content-around px-5 mt-5">
                 <div class="rounded rounded-pill border border-blue border-3 px-2 py-1 fw-bold fs-6 button"
-                @click="current_question = (current_question == 1) ? 1 : (current_question - 1)">
+                    @click="current_question = (current_question == 1) ? 1 : (current_question - 1)">
                     Prev
                 </div>
                 <div class="rounded rounded-pill border border-blue border-3 px-2 py-1 fw-bold fs-6 button"
-                @click="$emit('submit', answers.value)" v-if="current_question == question_count">
+                    @click="$emit('submit', answers)" v-if="current_question == question_count">
                     Submit
                 </div>
                 <div class="rounded rounded-pill border border-blue border-3 px-2 py-1 fw-bold fs-6 button"
-                @click="current_question = (current_question == question_count) ? question_count : (current_question + 1)" >
+                    @click="current_question = (current_question == question_count) ? question_count : (current_question + 1)">
                     Next
                 </div>
             </div>
@@ -123,7 +137,7 @@ watch(selected, () => { });
 }
 
 .baground-orange-primary {
-    background-color: var(--primary-color) !important;
+    background-color: pink !important;
 }
 
 .answer:active {

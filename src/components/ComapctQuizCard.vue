@@ -57,7 +57,7 @@ watch(props, () => { }, { deep: true });
 </script>
 
 <template>
-    <RouterLink style="text-decoration: none;" :to="'/'">
+    <RouterLink style="text-decoration: none;" :to="`/quiz/${id}`">
         <div class="d-flex flex-column gap-1 cardx border-5 border border-blue mx-2 my-1" id="compact" style="width: 34rem;">
             <div class="fs-4 fw-bold d-flex align-items-center"><span class="material-icons me-2 fs-2">style</span><span
                     class="fs-5 fw-bold">{{

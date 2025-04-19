@@ -1,5 +1,5 @@
 <script setup>
-import Navside from '@/components/Navside.vue';
+import Navside from '@/components/NavSide.vue';
 import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { get_date_string } from '@/composables/dateString';

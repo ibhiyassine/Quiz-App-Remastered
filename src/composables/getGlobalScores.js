@@ -11,7 +11,7 @@ function getScore(quizzes){
     return out;
 }
 
-export async function getGlobalScores(user='ibhi') {
+export async function getGlobalScores(user) {
     const querySnapshot = await getDocs(docRefs);
     let users = [];
     querySnapshot.forEach((element) => {
