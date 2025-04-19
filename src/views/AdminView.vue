@@ -4,6 +4,7 @@ import AdminItem from '@/components/AdminItem.vue';
 
 <template>
     <div>
-        <AdminItem />
+        <AdminItem  />
+        
     </div>
 </template>

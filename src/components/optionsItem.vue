@@ -85,10 +85,6 @@ const handleDelete = async () => {
 
       <ul class="dropdown-menu border-0" style="background-color: #fff1e1;" >
         <div class="dropdown-item settings d-flex h6 gap-2" style="font-size: 13px;background-color: #A6AEBF;"  @click="emit('showForm',2)"><span class="material-icons" style="font-size: 19px;">
-        add
-        </span>Create Your Own Questions</div>
-
-        <div class="dropdown-item settings2 d-flex h6 gap-2 " style="font-size: 13px; background-color: #A6AEBF" @click="emit('showForm',1)"> <span class="material-icons" style="font-size: 19px;">
           api
           </span>Import from API</div>
 
