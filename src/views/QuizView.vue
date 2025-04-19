@@ -1,101 +1,13 @@
-<template>
-  <div class="quiz-view">
-    <!-- Search and Filter Section -->
-    <div class="search-filter-section">
-      <h1 class="page-title">Quiz Library</h1>
-      <div class="search-bar">
-        <i class="material-icons search-icon">search</i>
-        <input 
-          type="text" 
-          v-model="searchQuery" 
-          placeholder="Search for quizzes..." 
-          @input="filterQuizzes"
-        >
-      </div>
-      
-      <div class="filters">
-        <div class="filter-group">
-          <label>Difficulty</label>
-          <select v-model="selectedDifficulty" @change="filterQuizzes">
-            <option value="">All Levels</option>
-            <option value="1">Easy</option>
-            <option value="2">Medium</option>
-            <option value="3">Hard</option>
-          </select>
-        </div>
-
-        <div class="filter-group">
-          <label>Topic</label>
-          <select v-model="selectedTopic" @change="filterQuizzes">
-            <option value="">All Topics</option>
-            <option v-for="topic in topics" :key="topic" :value="topic">
-              {{ topic }}
-            </option>
-          </select>
-        </div>
-
-        <button class="sort-btn" @click="toggleSortOrder">
-          <i class="material-icons">{{ sortAscending ? 'arrow_upward' : 'arrow_downward' }}</i>
-          Sort by Date
-        </button>
-      </div>
-    </div>
-
-    <!-- All Quizzes Section -->
-    <section class="quiz-section">
-      <div class="section-header">
-        <h2>Available Quizzes</h2>
-        <div class="section-line"></div>
-      </div>
-      <div class="quiz-grid">
-        <div 
-          v-for="quiz in filteredQuizzes" 
-          :key="quiz.id" 
-          class="quiz-card"
-          @click="navigateToQuiz(quiz.id)"
-        >
-          <div class="difficulty-badge">
-            {{ '★'.repeat(quiz.difficulty) }}
-          </div>
-          <div class="quiz-info">
-            <span class="quiz-name">{{ quiz.name }}</span>
-            <span class="quiz-topic">{{ quiz.topic }}</span>
-          </div>
-          <div class="card-footer">
-            <span class="quiz-date">
-              <i class="material-icons">event</i>
-              {{ formatDate(quiz.date) }}
-            </span>
-          </div>
-        </div>
-      </div>
-    </section>
-  </div>
-</template>
-
 <script setup>
-import { ref, computed } from 'vue';
+import Navside from '@/components/Navside.vue';
+import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-
+import { get_date_string } from '@/composables/dateString';
+import { getquizzes } from '@/composables/getQuiz';
 const router = useRouter();
 
 // test
-const quizzes = ref([
-  {
-    id: 1,
-    name: 'Geography of North Africa',
-    topic: 'Geography',
-    difficulty: 2,
-    date: new Date('2024-03-17'),
-  },
-  {
-    id: 2,
-    name: 'Basic Gastronomy',
-    topic: 'Cooking',
-    difficulty: 1,
-    date: new Date('2024-03-16'),
-  },
-]);
+let q = ref([]);
 
 const searchQuery = ref('');
 const selectedDifficulty = ref('');
@@ -103,40 +15,44 @@ const selectedTopic = ref('');
 const sortAscending = ref(false);
 
 const topics = computed(() => {
-  return [...new Set(quizzes.value.map(quiz => quiz.topic))];
+  let topics = new Set();
+  q.value.forEach((quiz) => {
+    quiz.topics.forEach(topic => topics.add(topic));
+  })
+  return [...topics];
 });
 
 const filteredQuizzes = computed(() => {
-  let filtered = [...quizzes.value];
+  let filtered = [...q.value];
 
   // Apply search filter
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase();
-    filtered = filtered.filter(quiz => 
+    filtered = filtered.filter(quiz =>
       quiz.name.toLowerCase().includes(query) ||
-      quiz.topic.toLowerCase().includes(query)
+      quiz.topics.includes(query)
     );
   }
 
   // Apply difficulty filter
   if (selectedDifficulty.value) {
-    filtered = filtered.filter(quiz => 
+    filtered = filtered.filter(quiz =>
       quiz.difficulty === parseInt(selectedDifficulty.value)
     );
   }
 
   // Apply topic filter
   if (selectedTopic.value) {
-    filtered = filtered.filter(quiz => 
-      quiz.topic === selectedTopic.value
+    filtered = filtered.filter(quiz =>
+      quiz.topics.includes(selectedTopic.value)
     );
   }
 
   // Apply sorting
   filtered.sort((a, b) => {
-    return sortAscending.value 
-      ? a.date - b.date 
-      : b.date - a.date;
+    return sortAscending.value
+      ? a.createdAt - b.createdAt
+      : b.createdAt - a.createdAt;
   });
 
   return filtered;
@@ -151,15 +67,98 @@ const toggleSortOrder = () => {
 };
 
 const formatDate = (date) => {
-  return new Date(date).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric'
-  });
+  return get_date_string(date) //TODO
 };
+
+onMounted(async () => {
+  console.log("On mounted");
+  const { quizzes, fetchQuizzes } = getquizzes();
+  await fetchQuizzes();
+  q.value = quizzes.value;
+})
 </script>
 
-<style scoped>
+
+<template>
+  <Navside>
+    <div class="quiz-view">
+      <!-- Search and Filter Section -->
+      <div class="search-filter-section">
+        <h1 class="page-title">Quiz Library</h1>
+        <div class="search-bar">
+          <i class="material-icons search-icon">search</i>
+          <input type="text" v-model="searchQuery" placeholder="Search for quizzes..." @input="filterQuizzes">
+        </div>
+
+        <div class="filters">
+          <div class="filter-group">
+            <label>Difficulty</label>
+            <select v-model="selectedDifficulty" @change="filterQuizzes" class="p-2">
+              <option value="">All Levels</option>
+              <option value="1">Easy</option>
+              <option value="2">Medium</option>
+              <option value="3">Hard</option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label>Topic</label>
+            <select v-model="selectedTopic" @change="filterQuizzes" class="p-2">
+              <option value="">All Topics</option>
+              <option v-for="topic in topics" :key="topic" :value="topic">
+                {{ topic }}
+              </option>
+            </select>
+          </div>
+
+          <button class="sort-btn p-2 border border-1 border-blue" @click="toggleSortOrder">
+            <i class="material-icons">{{ sortAscending ? 'arrow_upward' : 'arrow_downward' }}</i>
+            Sort by Date
+          </button>
+        </div>
+      </div>
+
+      <!-- All Quizzes Section -->
+      <section class="quiz-section">
+        <div class="section-header">
+          <h2>Available Quizzes</h2>
+          <div class="section-line"></div>
+        </div>
+        <div class="quiz-grid">
+          <RouterLink :to="`/quiz/${quiz.id}`" v-for="quiz in filteredQuizzes" :key="quiz.id" class="quiz-card justify-content-between" @click="navigateToQuiz(quiz.id)">
+            <div class="quiz-info">
+                <div class="quiz-name" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                  {{ quiz.name }}
+                </div>
+                <div class="difficulty-badge">
+                  {{ '★'.repeat(quiz.difficulty) }}
+                </div>
+              <div class="d-flex flex-wrap gap-2">
+                <span class="quiz-topic" v-for="topic of quiz.topics">{{ topic }}</span>
+              </div>
+            </div>
+            <div class="card-footer">
+              <span class="quiz-date">
+                <i class="material-icons">event</i>
+                {{ formatDate(quiz.createdAt) }}
+              </span>
+            </div>
+          </RouterLink>
+        </div>
+      </section>
+    </div>
+  </Navside>
+</template>
+
+<style scoped> 
+
+a {
+  text-decoration: none;
+}
+
+.border-blue{
+  border-color: var(--secondary-color) !important;
+}
 .quiz-view {
   min-height: 100vh;
   padding: 2rem 4rem;
@@ -303,6 +302,7 @@ const formatDate = (date) => {
   position: relative;
   overflow: hidden;
   cursor: pointer;
+  width: 22rem;
 }
 
 .quiz-card:hover {
@@ -311,9 +311,6 @@ const formatDate = (date) => {
 }
 
 .difficulty-badge {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
   color: #d47440;
   font-size: 1.2rem;
 }
@@ -321,17 +318,18 @@ const formatDate = (date) => {
 .quiz-info {
   display: flex;
   flex-direction: column;
+  text-decoration: none;
   gap: 0.75rem;
 }
 
 .quiz-name {
-  font-weight: 600;
-  font-size: 1.2rem;
+  font-weight: bold;
+  font-size: 1.1rem;
   color: #454f57;
 }
 
 .quiz-topic {
-  display: inline-block;
+  display: inline;
   padding: 0.4rem 1rem;
   background-color: rgba(212, 116, 64, 0.1);
   color: #d47440;
@@ -371,8 +369,9 @@ const formatDate = (date) => {
     gap: 1rem;
   }
 
-  .filter-group, .sort-btn {
+  .filter-group,
+  .sort-btn {
     width: 100%;
   }
 }
-</style> 
+</style>

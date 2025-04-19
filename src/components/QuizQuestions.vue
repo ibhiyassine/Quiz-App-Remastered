@@ -1,10 +1,58 @@
 <script setup>
-import { ref, watch } from 'vue';
-let question_count = ref(5);
-let response_count = ref(4);
+import { computed, ref, watch } from 'vue';
+let props = defineProps({
+    questions: {
+        type: Array,
+        default: [
+            {
+                questions: '',
+                answers: ['hello']
+            }
+        ],
+    },
+    NumberOfQuestions: {
+        type: Number,
+        default: 0,
+    }
+});
+
+
+let question_count = ref(0);
 let current_question = ref(1);
+let answers  = ref([]);
+let response_count = computed(() => {
+    try{
+        return props.questions[current_question.value - 1].answers.length;
+    }
+    catch(e){
+
+        return 1;
+    }
+});
+function show_ans(i){
+    try{
+        return props.questions[current_question.value - 1].answers[i - 1];
+    }
+    catch(e){
+        return '';
+    }
+}
+function show_ques(){
+    try{
+        return props.questions[current_question.value - 1].question;
+    }
+    catch(e){
+        return '';
+    }
+}
+
 let selected = ref(-1);
-watch(current_question, () => { });
+watch(props, () => {
+    question_count.value = props.NumberOfQuestions;
+    for(let i in question_count.value){
+        answers.value.push(-1); 
+    }
+ }, {deep: true});
 watch(selected, () => { });
 </script>
 
@@ -24,24 +72,25 @@ watch(selected, () => { });
         <div class="p-5" style="width: 36rem;">
             <!-- Here we put the question and the answers-->
             <div class="text-center border rounded border-3 border-blue p-1 fs-6 fw-bold baground-orange question">
-                What is the capital of Morocco? givent he fact that most of the preopjaôiezfnpioerhniup and that
-                hdjvpairub aeriuf aperiuh hjéraiupeiabvairjbvjrkav aiurha iu rvmai biau viu rjmkvnzpiuv rpriubvjrvbpréi
-                u mvirufvhzmiu rhvhsencrimzul gkhjmvznierkjvnsldi ufhimvkj nrnq,vcmiur ezkhnqvkjlnc mziuvhnk
-                ceemfivkhnaz
+                {{ show_ques() }}
             </div>
-            <div v-for="i in response_count" :key="i" :class="{ 'baground-orange-primary': selected == i }"
+            <div v-for="i in response_count" :key="i" :class="{ 'baground-orange-primary': answers[current_question - 1] == i }"
                 class="p-3 baground-orange border border-3 border-blue answer rounded-pill mt-3 fw-bold d-flex align-items-center"
-                @click="selected = i">
-                <span class="material-icons me-1">lightbulb</span> Answer {{ i }}
+                @click="answers[current_question - 1] = i">
+                <span class="material-icons me-1">lightbulb</span> {{ show_ans(i) }}
             </div>
             <!--Here we put the next and prev buttons-->
             <div class="d-flex justify-content-around px-5 mt-5">
                 <div class="rounded rounded-pill border border-blue border-3 px-2 py-1 fw-bold fs-6 button"
-                @click="current_question = (current_question == 1) ? 5 : (current_question - 1)%question_count">
+                @click="current_question = (current_question == 1) ? 1 : (current_question - 1)">
                     Prev
                 </div>
                 <div class="rounded rounded-pill border border-blue border-3 px-2 py-1 fw-bold fs-6 button"
-                @click="current_question = (current_question == 4) ? 5 : (current_question + 1) % question_count" >
+                @click="$emit('submit', answers.value)" v-if="current_question == question_count">
+                    Submit
+                </div>
+                <div class="rounded rounded-pill border border-blue border-3 px-2 py-1 fw-bold fs-6 button"
+                @click="current_question = (current_question == question_count) ? question_count : (current_question + 1)" >
                     Next
                 </div>
             </div>
