@@ -1,6 +1,7 @@
 <script setup>
 import { getUserInfo } from "@/composables/getUserInfo";
-import { ref, onBeforeMount } from "vue";
+import { ref, onBeforeMount,computed } from "vue";
+import { get_date_string } from "../composables/dateString";
 const props=defineProps({
   username: {
     type: String,
@@ -14,6 +15,10 @@ onBeforeMount(async () => {
         userInfo.value = await getUserInfo(props.username);
         console.log("aa",userInfo.value.mail);
 
+});
+
+let date_string = computed(() => {
+    return get_date_string(userInfo.value.createdAt);
 });
 </script>
 
@@ -36,7 +41,7 @@ onBeforeMount(async () => {
             </div>
   
             <div>
-              <span class="join">Joined May, 2021</span>
+              <span class="join" v-show="!userInfo.isAdmin">Joined at {{date_string}}</span>
             </div>
             <div class="d-flex mt-2">
                 <button type="button" class="logout-btn-outline">Log out</button>            </div>
@@ -146,7 +151,7 @@ hr .new1 {
 }
 
 .join {
-    font-size: 14px;
+    font-size: 13px;
     color: #1d3c45;
     font-weight: bold
 }

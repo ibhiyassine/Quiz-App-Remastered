@@ -13,8 +13,9 @@ export async function getUserLatest(user){
             name: quizRef.get("name"),
             difficulty: quizRef.get("difficulty"),
             topics: quizRef.get("topics"),
-            questions: element.answers,
+            questions: element.score,
             createdAt: quizRef.get("createdAt"),
+            NumberOfQuestions: quizRef.get("NumberOfQuestions"),
         };
         return e;
     }));

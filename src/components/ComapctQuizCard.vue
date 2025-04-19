@@ -24,24 +24,30 @@ const props = defineProps({
         default: () => ['Array', 'of', 'Topics'],
     },
     questions: {
-        type: Array,
+        type: Number,
         required: true,
-        default: () => [0, 1, 0],
+        default: 0,
     },
     createdAt: {
         type: Timestamp,
         required: true,
     },
+    NumberOfQuestions: {
+        type: Number,
+        required: true,
+        default: 0,
+
+    }
 });
 
-let count_questions = computed(() => {
-    console.log("Counting questions", props.questions.length);
-    return props.questions.length;
-});
+// let count_questions = computed(() => {
+//     console.log("Counting questions", props.questions.length);
+//     return props.questions.length;
+// });
 
-let correct_answers = computed(() => {
-    return props.questions.filter((question) => {return question == 0}).length;
-});
+// let correct_answers = computed(() =>
+//   props.questions.filter((question) => question === 0).length
+// );
 
 let date_string = computed(() => {
     return get_date_string(props.createdAt);
@@ -58,7 +64,7 @@ watch(props, () => { }, { deep: true });
                     name }}</span></div>
             <div class="d-flex align-items-center justify-content-between mx-5">
                 <div class="fw-bold">
-                    Score: {{ correct_answers }} / {{ count_questions }}
+                    Score: {{questions}}/{{ NumberOfQuestions }} 
                 </div>
                 <div class="fw-bold d-flex align-items-center">
                     <span class="material-icons me-2">date_range</span>

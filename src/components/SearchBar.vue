@@ -19,7 +19,7 @@ const cliick = ref(false);
 const { users, fetchUsers } = getusers();
 onMounted(async () => {
   await fetchUsers().then(()=>{
-    console.log("users:", users.value[0].username);
+    console.log("users:", users.value[0]);
   })
 });
 

@@ -33,7 +33,7 @@ onMounted(async () => {
 
 <template>
   <div>
-    <NavSide>
+    <NavSide :inprofile="false">
       <div class="p-1">
         <div class="fs-2 page-title fw-bold">
           Your recently taken quizzes
@@ -55,14 +55,7 @@ onMounted(async () => {
           <QuizCarousel />
         </div>
       </div>
-      <div>
-        <div class="fs-2 page-title fw-bold">
-          Wanna know what the others are up to?
-        </div>
-        <div>
-          <LeaderBoard class="mb-3" :users="users" :userRank="userRank" :userScore="userScore"/>
-        </div>
-      </div>
+      
     </NavSide>
   </div>
 </template>
