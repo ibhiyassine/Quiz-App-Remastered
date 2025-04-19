@@ -1,48 +1,56 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth"
+import { checkUsername, addUsername } from '@/composables/createNewUser'
+import { loginUser } from '@/composables/UserLogin'
 
 const router = useRouter()
 const route = useRoute()
+const auth = getAuth();
 
 const isLogin = computed(() => route.path === '/login')
 
 const email = ref('')
 const password = ref('')
 const username = ref('')
-const month = ref('')
-const day = ref('')
-const year = ref('')
 const showPassword = ref(false)
+let errorMessage = ref('')
 
-
-const months = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December'
-]
-const years = Array.from({ length: 100 }, (_, i) => new Date().getFullYear() - i)
-
-const handleSubmit = () => {
-  if (isLogin.value) {
-    console.log('Login submitted:', {
-      email: email.value,
-      password: password.value
-    })
-  } else {
-    console.log('Sign up submitted:', {
-      email: email.value,
-      password: password.value,
-      username: username.value,
-      birthday: `${month.value} ${day.value}, ${year.value}`
-    })
-  }
-}
 
 const switchMode = () => {
   if (isLogin.value) {
     router.push('/register')
   } else {
     router.push('/login')
+  }
+}
+
+async function submitLogReg(){
+  if(isLogin.value){
+    await loginUser(email.value, password.value);
+  }
+  else{
+    if(await checkUsername(username.value)){
+      
+      createUserWithEmailAndPassword(auth, email.value, password.value)
+    .then((userCredential) => {
+      // Signed up 
+      const user = userCredential.user;
+      console.log("User created", user);
+      // ...
+    })
+    .catch((error) => {
+      errorMessage.value = error.message;
+      console.log("Error in creating user", errorMessage.value);
+      // ..
+    });
+    await addUsername(username.value, email.value);
+    router.replace(`/home/${username.value}`);
+    }
+    else{
+      errorMessage.value = "username already exists";
+    }
   }
 }
 </script>
@@ -83,44 +91,17 @@ const switchMode = () => {
           <h1 class="title">Smash sets in<br>your sweats.</h1>
         </div>
 
-        <form @submit.prevent="handleSubmit" class="login-form">
+        <form @submit.prevent="submitLogReg" class="login-form">
           <button type="button" class="social-btn google-btn">
             <img src="@/assets/google-icon.svg" alt="Google" class="social-icon" />
             {{ isLogin ? 'Log in' : 'Continue' }} with Google
           </button>
 
-          <button type="button" class="social-btn facebook-btn">
-            <img src="@/assets/facebook-icon.svg" alt="Facebook" class="social-icon" />
-            {{ isLogin ? 'Log in' : 'Continue' }} with Facebook
-          </button>
-
-          <button type="button" class="social-btn apple-btn">
-            <img src="@/assets/apple-icon.svg" alt="Apple" class="social-icon" />
-            {{ isLogin ? 'Log in' : 'Continue' }} with Apple
-          </button>
-
           <div class="divider">
-            <span style="color:black">or email</span>
+            <span style="color:var(--primary-color)" class="fs-5 fw-bold bg-transparent text-center">or email</span >
           </div>
 
           <template v-if="!isLogin">
-            <div class="birthday-section">
-              <label>Birthday</label>
-              <div class="birthday-inputs">
-                <select v-model="month" required>
-                  <option value="" disabled selected>Month</option>
-                  <option v-for="m in months" :key="m" :value="m">{{ m }}</option>
-                </select>
-                <select v-model="day" required>
-                  <option value="" disabled selected>Day</option>
-                  <option v-for="d in 31" :key="d" :value="d">{{ d }}</option>
-                </select>
-                <select v-model="year" required>
-                  <option value="" disabled selected>Year</option>
-                  <option v-for="y in years" :key="y" :value="y">{{ y }}</option>
-                </select>
-              </div>
-            </div>
 
             <div class="form-group">
               <input
@@ -144,8 +125,7 @@ const switchMode = () => {
 
           <div class="form-group">
             <div class="password-header">
-              <label style="color: rgb(56, 56, 233);">Password</label>
-              <a v-if="isLogin" href="#" class="forgot-link"  >Forgot password</a>
+              <label style="color: var(--primary-color);">Password</label>
             </div>
             <div class="password-input">
               <input
@@ -196,10 +176,12 @@ const switchMode = () => {
 
           <div class="terms-text">
             By clicking {{ isLogin ? 'Log in' : 'Sign up' }}, you accept Quizlet's
-            <a href="#" @click.prevent style="color: rgb(56, 56, 233);">Terms of Service</a> and
-            <a href="#" @click.prevent style="color: rgb(56, 56, 233);">Privacy Policy</a>
+            <a href="#" @click.prevent style="color: var(--primary-color);">Terms of Service</a> and
+            <a href="#" @click.prevent style="color: var(--primary-color);">Privacy Policy</a>
           </div>
-
+          <div class="text-danger fs-4 fw-bold text-center">
+            {{ errorMessage }}
+          </div>
           <button type="submit" class="submit-btn">
             {{ isLogin ? 'Log in' : 'Sign up' }}
           </button>
@@ -283,7 +265,7 @@ const switchMode = () => {
   left: 0;
   width: 100%;
   height: 2px;
-  background-color: blue;
+  background-color: var(--primary-color);
 }
 
 .login-container {
@@ -367,7 +349,7 @@ const switchMode = () => {
   text-align: center;
   position: relative;
   margin: 0.75rem 0;
-  color:black
+  color:black;
 }
 
 .divider::before,
@@ -375,7 +357,7 @@ const switchMode = () => {
   content: '';
   position: absolute;
   top: 50%;
-  width: 45%;
+  width: 30%;
   height: 1px;
   background-color: #d9dde8;
 }
@@ -632,10 +614,4 @@ select:invalid {
 
   padding-bottom: 20px;
 }
-
-
-
-
 </style>
-
-
