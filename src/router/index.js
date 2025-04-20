@@ -82,14 +82,13 @@ router.beforeEach((to, from, next) => {
               next({ name: "LandingPage" });
           }
       });
-  } else if ((to.name === "profile") && !isAuthenticated) {
+  } else if ((to.name === "profile" || to.name === "home") && !isAuthenticated) {  
       // Wait for Firebase to initialize auth state
       auth.onAuthStateChanged((user) => {
           if (user) {
               next(); // Proceed if the user is authenticated
           } else {
-              alert("You must be logged in to access this page.");
-              next({ name: "Login" }); // Redirect to login if not authenticated
+              next({ name: "LandingPage" }); // Redirect to login if not authenticated
           }
       });
   } else {

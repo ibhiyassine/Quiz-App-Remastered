@@ -1,10 +1,19 @@
 /* eslint-disable no-unused-vars */
-import { db } from '@/firebase';
+import { db,auth } from '@/firebase';
 import { doc, deleteDoc,updateDoc  } from "firebase/firestore";
 import { getusers } from './getUsers';
 import { getquizzes } from './getQuiz';
 
  export async function DeleteUser(username, router) {
+  let user = auth.currentUser;
+  if (user) {
+    try {
+      await user.delete();
+      console.log("User deleted successfully");
+    } catch (error) {
+      console.log("Error deleting user:", error);
+    }
+  }
     const {quizzes,fetchQuizzes} = getquizzes();
     await fetchQuizzes();
     for (let quiz of quizzes.value) {

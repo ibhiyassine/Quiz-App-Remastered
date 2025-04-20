@@ -5,8 +5,6 @@ const logout = async () => {
     if (auth.currentUser) {
         try {
             await signOut(auth);
-            console.log("User signed out");
-            alert("Logged out");
         } catch (error) {
             console.error("Error signing out:", error);
         }
@@ -16,4 +14,4 @@ const logout = async () => {
     }
 };
 
-export default logout;
+export { logout };

@@ -91,20 +91,10 @@ async function submitLogReg() {
         </div>
 
         <form @submit.prevent="submitLogReg" class="login-form">
-          <button type="button" class="social-btn google-btn">
-            <img src="@/assets/google-icon.svg" alt="Google" class="social-icon" />
-            {{ isLogin ? 'Log in' : 'Continue' }} with Google
-          </button>
-
-          <div class="divider">
-            <span style="color:var(--primary-color)" class="fs-5 fw-bold bg-transparent text-center">or email</span>
-          </div>
-
-
-
+      
           <div class="form-group">
             <label>Email</label>
-            <input type="text" v-model="username" placeholder="Enter your username" required />
+           <input type="text" v-model="username" placeholder="Enter your username" required />
           </div>
           <template v-if="!isLogin">
 

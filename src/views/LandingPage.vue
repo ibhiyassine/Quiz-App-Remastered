@@ -79,7 +79,8 @@ const navigateToRegister = () => {
 }
 
 .navbar-brand .logo {
-  height: 50px;
+  height: 75px;
+  width: 75px;
 }
 
 .navbar-links {
