@@ -13,6 +13,7 @@ const searchQuery = ref('');
 const selectedDifficulty = ref('');
 const selectedTopic = ref('');
 const sortAscending = ref(false);
+const loading = ref(true);
 
 const topics = computed(() => {
   let topics = new Set();
@@ -71,16 +72,24 @@ const formatDate = (date) => {
 };
 
 onMounted(async () => {
+  loading.value = true;
   console.log("On mounted");
   const { quizzes, fetchQuizzes } = getquizzes();
   await fetchQuizzes();
   q.value = quizzes.value;
-})
+  setTimeout(() => loading.value = false, 1000);})
 </script>
 
 
 <template>
-  <Navside>
+  <!-- Loading and Error States -->
+  <div v-if="loading" class="text-center p-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-3 fs-5">Loading quizzes...</p>
+  </div>
+  <Navside v-else>
     <div class="quiz-view">
       <!-- Search and Filter Section -->
       <div class="search-filter-section">
@@ -125,14 +134,15 @@ onMounted(async () => {
           <div class="section-line"></div>
         </div>
         <div class="quiz-grid">
-          <RouterLink :to="`/quiz/${quiz.id}`" v-for="quiz in filteredQuizzes" :key="quiz.id" class="quiz-card justify-content-between" @click="navigateToQuiz(quiz.id)">
+          <RouterLink :to="`/quiz/${quiz.id}`" v-for="quiz in filteredQuizzes" :key="quiz.id"
+            class="quiz-card justify-content-between" @click="navigateToQuiz(quiz.id)">
             <div class="quiz-info">
-                <div class="quiz-name" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                  {{ quiz.name }}
-                </div>
-                <div class="difficulty-badge">
-                  {{ '★'.repeat(quiz.difficulty) }}
-                </div>
+              <div class="quiz-name" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                {{ quiz.name }}
+              </div>
+              <div class="difficulty-badge">
+                {{ '★'.repeat(quiz.difficulty) }}
+              </div>
               <div class="d-flex flex-wrap gap-2">
                 <span class="quiz-topic" v-for="topic of quiz.topics">{{ topic }}</span>
               </div>
@@ -150,15 +160,15 @@ onMounted(async () => {
   </Navside>
 </template>
 
-<style scoped> 
-
+<style scoped>
 a {
   text-decoration: none;
 }
 
-.border-blue{
+.border-blue {
   border-color: var(--secondary-color) !important;
 }
+
 .quiz-view {
   min-height: 100vh;
   padding: 2rem 4rem;

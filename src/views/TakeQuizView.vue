@@ -30,6 +30,7 @@ let isButtonDisabled = ref(false);
 let takingQuiz = ref(false);
 let end = ref(false);
 let findRankScore = ref({});
+const loading = ref(true);
 
 let user = ref("");
 function setUser(u) {
@@ -91,6 +92,7 @@ function gotoResults() {
 }
 
 onMounted(async () => {
+  loading.value = true;
   await authStateListener(setUser);
   quiz.value = await getQuizID(route.params.id);
   console.log("taking quiz", quiz.value);
@@ -109,13 +111,22 @@ onMounted(async () => {
     findRankScore.value = {};
   }
   console.log("findRankScore", findRankScore.value, quiz.value.takenBy);
+  setTimeout(() => loading.value = false, 1000);
+  
 });
 
 
 </script>
 
 <template>
-  <Navside>
+  <!-- Loading and Error States -->
+  <div v-if="loading" class="text-center p-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-3 fs-5">Loading quiz...</p>
+  </div>
+  <Navside v-else>
     <div v-if="end" class="quiz-modal-blur" id="quiz-modal">
       <div class="quiz-modal-content">
         <h2 class="mb-4">The quiz has ended</h2>

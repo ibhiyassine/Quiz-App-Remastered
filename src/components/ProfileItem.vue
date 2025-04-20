@@ -15,6 +15,7 @@ const route = useRoute();
 let users = ref([]);
 let userScore = ref([]);
 let userRank = ref([]);
+const loading = ref(true);
 
 let userLatest = ref([]);
 let user = ref('');
@@ -42,8 +43,10 @@ async function loadProfileData() {
 }
 
 onMounted(async () => {
+  loading.value = true;
   await authStateListener(defineUser);
   await loadProfileData();
+  setTimeout(() => loading.value = false, 1000);
 })
 
 // Watch for route params changes to reload data when navigating between profiles
@@ -58,29 +61,33 @@ const result = ref([]);
 </script>
 
 <template>
-  <div>
-    <NavSide :username="username" :inprofile="username == user">
-      <div v-if="result.length != 0" class="p-1">
-        <div class="fs-4 text-blue fw-bold fst-italic text-decoration-underline">
-          {{ (username == user) ? 'Your taken quizzes' : `${username}'s taken quizzes` }}
-        </div>
-        <div v-if="result" class="d-flex flex-wrap gap-2">
-          <ComapctQuizCard v-for="(quiz, index) in result" :key="index" v-bind="quiz" />
-        </div>
+  <!-- Loading and Error States -->
+  <div v-if="loading" class="text-center p-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-3 fs-5">Loading profile to take a look 🐨...</p>
+  </div>
+  <NavSide v-else :username="username" :inprofile="username == user">
+    <div v-if="result.length != 0" class="p-1">
+      <div class="fs-4 text-blue fw-bold fst-italic text-decoration-underline">
+        {{ (username == user) ? 'Your taken quizzes' : `${username}'s taken quizzes` }}
       </div>
-      <div v-else class="fs-4 text-blue fw-bold text-danger text-decoration-underline">
-        No quizzes were taken by this user.
+      <div v-if="result" class="d-flex flex-wrap gap-2">
+        <ComapctQuizCard v-for="(quiz, index) in result" :key="index" v-bind="quiz" />
+      </div>
+    </div>
+    <div v-else class="fs-4 text-blue fw-bold text-danger text-decoration-underline">
+      No quizzes were taken by this user.
+    </div>
+    <div>
+      <div class="fs-4 text-blue fw-bold fst-italic text-decoration-underline">
+        Wanna know what the others are up to?
       </div>
       <div>
-        <div class="fs-4 text-blue fw-bold fst-italic text-decoration-underline">
-          Wanna know what the others are up to?
-        </div>
-        <div>
-          <LeaderBoard class="mb-3" :users="users" :userRank="userRank" :userScore="userScore" />
-        </div>
+        <LeaderBoard class="mb-3" :users="users" :userRank="userRank" :userScore="userScore" />
       </div>
+    </div>
 
-    </NavSide>
-
-  </div>
+  </NavSide>
 </template>
