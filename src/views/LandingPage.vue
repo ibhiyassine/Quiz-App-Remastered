@@ -54,7 +54,6 @@ const navigateToRegister = () => {
 </template>
 
 <style scoped>
-@import 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css';
 
 .landing-page {
   color: var(--secondary-color);
@@ -80,7 +79,8 @@ const navigateToRegister = () => {
 }
 
 .navbar-brand .logo {
-  height: 50px;
+  height: 75px;
+  width: 75px;
 }
 
 .navbar-links {

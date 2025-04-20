@@ -32,7 +32,7 @@ watch(user, async () => {
 
 <template>
   <div>
-    <NavSide :inprofile="false">
+    <NavSide :inprofile="false" :username="user">
       <div class="p-1">
         <div class="fs-2 page-title fw-bold">
           Your recently taken quizzes

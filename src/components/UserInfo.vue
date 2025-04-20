@@ -2,6 +2,9 @@
 import { getUserInfo } from "@/composables/getUserInfo";
 import { ref, onBeforeMount,computed } from "vue";
 import { get_date_string } from "../composables/dateString";
+import { logout } from "@/composables/userLogout";
+import { useRouter } from "vue-router";
+const router = useRouter();
 const props=defineProps({
   username: {
     type: String,
@@ -9,6 +12,16 @@ const props=defineProps({
     default: "ibhi"
   }
 })
+
+async function logout2() {
+  const confirmed = confirm("Are you sure you want to log out?");
+  if (confirmed) {
+    await logout();
+    router.replace("/");
+    
+    console.log("Logged out!");
+  }
+}
 
 const userInfo = ref(null);
 onBeforeMount(async () => {
@@ -44,7 +57,7 @@ let date_string = computed(() => {
               <span class="join" v-show="!userInfo.isAdmin">Joined at {{date_string}}</span>
             </div>
             <div class="d-flex mt-2">
-                <button type="button" class="logout-btn-outline">Log out</button>            </div>
+                <button type="button" class="logout-btn-outline" @click="logout2">Log out</button>            </div>
           </template>
   
           <template v-else>

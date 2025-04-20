@@ -50,12 +50,20 @@ const handleDelete = async () => {
        
     </div>
 
-    <div class="row" v-show="notadmin">
+    <div class="row" v-show="notadmin && !inprofile">
         <router-link :to="`/profile/${username}`" class="d-flex gap-4 text-decoration-none align-items-center h4" style="color: #d2601a; background-color: #1d3c45; height: 50px; padding: 10px; border-radius: 5px; font-size: 23px;font-weight: bold;">
             <span class="material-icons "  style="font-size: 30px;">
             account_circle
             </span> Profile
       </router-link>
+    </div>
+    <div class="row" v-show="!notadmin && inprofile">
+      <router-link  :to="`/admin/${username}`" class="d-flex gap-4 text-decoration-none align-items-center h4" style="color: #d2601a; background-color: #1d3c45; height: 50px; padding: 10px; border-radius: 5px; font-size: 23px;font-weight: bold;">
+                <span class="material-icons "  style="font-size: 30px;">
+                account_circle
+                </span> Admin
+          </router-link>
+
     </div>
 
     <div class="dropdown"  v-show="inprofile && username == route.params.username">
@@ -70,12 +78,8 @@ const handleDelete = async () => {
         <div class="dropdown-item settings d-flex h6" @click="handleDelete" ><span class="material-icons" style="font-size: 20px;">
     delete
     </span>Delete account</div>
-        <div class="dropdown-item settings2 d-flex h6  "><span class="material-icons" style="font-size: 20px;">
-        lock_reset
-        </span>Change password</div>
           </ul>
         </div>
-
 <div class="dropdown"  v-show="!notadmin">
       <div class="btn btn-secondary dropdown-toggle d-flex gap-4 text-decoration-none align-items-center h4" style="color: #d2601a; background-color: #1d3c45; height: 50px; padding: 10px; border-radius: 5px; font-size: 23px;font-weight: bold; width: 230px; position: relative; right:12px"  role="button" data-bs-toggle="dropdown" >
         <span class="material-icons" style="font-size: 30px;">

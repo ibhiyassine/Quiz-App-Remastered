@@ -30,7 +30,7 @@ const quiz = reactive({
   topic: "",
 });
 
-const numberOfQuestions = ref(10);
+const NumberOfQuestions = ref(10);
 const isLoading = ref(false);
 
 
@@ -58,7 +58,7 @@ async function saveQuiz() {
       return;
     }
 
-    const url = `https://opentdb.com/api.php?amount=${numberOfQuestions.value}&category=${categoryId}&difficulty=${quiz.difficulty}&type=multiple`;
+    const url = `https://opentdb.com/api.php?amount=${NumberOfQuestions.value}&category=${categoryId}&difficulty=${quiz.difficulty}&type=multiple`;
     const res = await fetch(url);
     const data = await res.json();
 
@@ -98,7 +98,7 @@ async function saveQuiz() {
 
     const quizData = {
       name: quiz.title,
-      numberOfQuestions: questionRefs.length,
+      NumberOfQuestions: questionRefs.length,
       createdAt: new Date(),
       difficulty: difficultyLevel,
       takenBy: [],
@@ -154,14 +154,14 @@ async function saveQuiz() {
         </select>
 
         <div class="mb-3">
-          <label for="numberOfQuestions" class="form-label" style="color: #1d3c45; font-weight: bold;">Number of Questions</label>
+          <label for="NumberOfQuestions" class="form-label" style="color: #1d3c45; font-weight: bold;">Number of Questions</label>
           <input
             type="number"
             class="form-control border border-3 border-blue"
-            id="numberOfQuestions"
+            id="NumberOfQuestions"
             min="1"
             max="50"
-            v-model="numberOfQuestions"
+            v-model="NumberOfQuestions"
           />
         </div>
 
