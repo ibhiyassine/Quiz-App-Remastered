@@ -91,9 +91,10 @@ function gotoResults() {
 }
 
 onMounted(async () => {
+  await authStateListener(setUser);
   quiz.value = await getQuizID(route.params.id);
-  console.log(quiz.value);
-  counter.value = 30 * quiz.value.NumberOfQuestions;
+  console.log("taking quiz", quiz.value);
+  counter.value = 10 * quiz.value.NumberOfQuestions;
   if (quiz.value.takenBy.length > 0) {
     for (let u = 0; u < quiz.value.takenBy.length; u++) {
       if (user.value === quiz.value.takenBy[u].name) {
@@ -110,9 +111,7 @@ onMounted(async () => {
   console.log("findRankScore", findRankScore.value, quiz.value.takenBy);
 });
 
-onBeforeMount(async () => {
-  await authStateListener(setUser);
-})
+
 </script>
 
 <template>
@@ -184,7 +183,9 @@ button {
   color: var(--primary-color);
   text-decoration: none;
 }
-
+.border-blue {
+    border-color: var(--secondary-color) !important;
+}
 .btn-bg {
   background-color: var(--secondary-color) !important;
   border-color: var(--primary-color);
