@@ -2,15 +2,11 @@
 import { defineProps, ref,onMounted,defineEmits } from 'vue';
 import { useRoute, useRouter } from "vue-router";
 import { DeleteUser } from '@/composables/DeleteUser.js';
+import { authStateListener } from '@/composables/authStateListener';
 
 const emit = defineEmits(['showForm']);
 
 const props = defineProps({
-  username: {
-    type: String,
-    required: true,
-    default: "ibhi"
-  },
   notadmin:{
     type: Boolean,
     required: true,
@@ -24,6 +20,10 @@ const props = defineProps({
 })
 const router= useRouter();
 const route = useRoute();
+const username = ref('');
+async function defineUser(user) {
+  username.value = user.displayName;
+}
 const handleDelete = async () => {
   const confirmed = confirm(`Are you sure you want to delete "${props.username}"?`);
   if (confirmed) {
@@ -33,7 +33,9 @@ const handleDelete = async () => {
 };
 
 
-
+onMounted(async () => {
+  await authStateListener(defineUser);
+})
 
 </script>
 
@@ -80,7 +82,7 @@ const handleDelete = async () => {
     </span>Delete account</div>
           </ul>
         </div>
-<div class="dropdown"  v-show="!notadmin">
+<div class="dropdown"  v-show="!notadmin && !inprofile">
       <div class="btn btn-secondary dropdown-toggle d-flex gap-4 text-decoration-none align-items-center h4" style="color: #d2601a; background-color: #1d3c45; height: 50px; padding: 10px; border-radius: 5px; font-size: 23px;font-weight: bold; width: 230px; position: relative; right:12px"  role="button" data-bs-toggle="dropdown" >
         <span class="material-icons" style="font-size: 30px;">
            add
