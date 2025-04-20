@@ -85,7 +85,7 @@ async function saveQuiz() {
         const questionData = {
           question: q.question,
           answers: allAnswers,
-          category: [q.category],
+          category: [quiz.topic],
           difficulty: difficultyLevel
         };
 

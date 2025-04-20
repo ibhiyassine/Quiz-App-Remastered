@@ -35,6 +35,7 @@ export async function GetSavedQuetions(data) {
   } else if (data.difficulty === "3") {
     allQuestions = allQuestions.filter((question) => question.difficulty === 3);
   }
-  
+  console.log(allQuestions);
+  console.log(seenIds);
   return allQuestions;
 }

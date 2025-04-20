@@ -25,6 +25,7 @@ const shouldFetch = computed(() => {
 
 watch(shouldFetch, async (newValue) => {
   if (newValue) {
+    console.log("Fetching questions...");
     fetchedQuestions.value = await GetSavedQuetions(quiz);
     console.log(" questions:", fetchedQuestions.value);
   }
@@ -77,10 +78,14 @@ function toggleQuestion(q) {
 }
 //scroll 
 async function showQuestionsAndScroll() {
+  console.log("Fetching questions...");
+    fetchedQuestions.value = await GetSavedQuetions(quiz);
+    console.log(" questions:", fetchedQuestions.value);
   showQuestionList.value = true;
   
   await nextTick();
   
+  console.log("hey");
   if (questionsContainerRef.value) {
     questionsContainerRef.value.scrollIntoView({ behavior: 'smooth' });
   }
