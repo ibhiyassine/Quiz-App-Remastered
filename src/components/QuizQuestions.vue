@@ -70,9 +70,9 @@ watch(selected, () => { });
 </script>
 
 <template>
-    <div class="border border-5 border-blue rounded d-flex bg-white" style="height: 600px; width: 800px;">
-        <div class="border-end border-5 border-blue">
-            <div class="fs-4 fw-bold text-blue border-bottom border-blue p-3 border-5">
+    <div class="border border-5 border-blue rounded d-flex bg-white mb-3" style="height: 600px; width: 800px;">
+        <div class="border-end border-5 border-blue overflow-y-scroll" style="scrollbar-width: none;">
+            <div class="fs-4 fw-bold text-blue border-bottom border-blue p-3 border-5 sticky-top bg-white">
                 Questions
             </div>
             <div v-for="i in question_count" :key="i"
@@ -114,6 +114,12 @@ watch(selected, () => { });
 </template>
 
 <style scoped>
+.sticky-top {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
 .border-blue {
     border-color: var(--secondary-color) !important;
 }

@@ -18,7 +18,7 @@ let userRank = ref([]);
 
 let userLatest = ref([]);
 let user = ref('');
-function defineUser(u){
+function defineUser(u) {
   user.value = u.displayName;
 }
 
@@ -32,10 +32,10 @@ async function loadProfileData() {
   users.value = out.users;
   userScore.value = out.userScore;
   userRank.value = out.userRank;
-  
+
   // Load user's latest quizzes
   userLatest.value = await getUserLatest(username.value);
-  
+
   // Load user's taken quizzes
   result.value = await getUserquizzes(username.value);
   console.log("User quizzes loaded", result.value);
@@ -58,29 +58,29 @@ const result = ref([]);
 </script>
 
 <template>
-        <div>
-            <NavSide :username="username" :inprofile="username == user">
-            <div v-if="result.length!=0" class="p-1">
-                <div class="fs-4 text-blue fw-bold fst-italic text-decoration-underline">
-                {{ (username == user) ? 'Your taken quizzes' : `${username}'s taken quizzes` }}
-                </div>
-                    <div v-if="result.length === 0" class="text-danger p-2">
-                        No quizzes found for this user.
-                    </div>
-                    <div v-if="result" class="d-flex flex-wrap gap-2">
-                    <ComapctQuizCard v-for="(quiz, index) in result" :key="index" v-bind="quiz"/>
-                </div>
-                </div>
-                <div>
+  <div>
+    <NavSide :username="username" :inprofile="username == user">
+      <div v-if="result.length != 0" class="p-1">
+        <div class="fs-4 text-blue fw-bold fst-italic text-decoration-underline">
+          {{ (username == user) ? 'Your taken quizzes' : `${username}'s taken quizzes` }}
+        </div>
+        <div v-if="result" class="d-flex flex-wrap gap-2">
+          <ComapctQuizCard v-for="(quiz, index) in result" :key="index" v-bind="quiz" />
+        </div>
+      </div>
+      <div v-else class="fs-4 text-blue fw-bold text-danger text-decoration-underline">
+        No quizzes were taken by this user.
+      </div>
+      <div>
         <div class="fs-4 text-blue fw-bold fst-italic text-decoration-underline">
           Wanna know what the others are up to?
         </div>
         <div>
-          <LeaderBoard class="mb-3" :users="users" :userRank="userRank" :userScore="userScore"/>
+          <LeaderBoard class="mb-3" :users="users" :userRank="userRank" :userScore="userScore" />
         </div>
       </div>
-      
-            </NavSide>
 
-        </div>
+    </NavSide>
+
+  </div>
 </template>
