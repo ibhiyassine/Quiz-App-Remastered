@@ -22,6 +22,11 @@ npm install
 npm run dev
 ```
 
+### The web app is hosted at:
+```
+ https://quizapp-87fbd.web.app
+```
+
 ### Compile and Minify for Production
 
 ```sh
