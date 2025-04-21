@@ -14,6 +14,8 @@ import { authStateListener } from '@/composables/authStateListener';
 const route = useRoute();
 const router = useRouter();
 
+
+
 let quiz = ref({
   name: '',
   difficulty: 0,
@@ -31,6 +33,8 @@ let takingQuiz = ref(false);
 let end = ref(false);
 let findRankScore = ref({});
 const loading = ref(true);
+
+const quizQuestionsRef = ref(null);
 
 let user = ref("");
 function setUser(u) {
@@ -65,9 +69,22 @@ function disableButton() {
         counter.value--;
       } else {
         clearInterval(interval);
-        endQuiz();
+
+        handleTimerEnd(); 
       }
     }, 1000);
+  }
+}
+
+async function handleTimerEnd() {
+  if (quizQuestionsRef.value) {
+    console.log("quizQuestionsRef", quizQuestionsRef.value);
+    end.value = true;
+    console.log("quizQuestionsRef", quizQuestionsRef.value);
+    const answers = quizQuestionsRef.value.answers;
+    await submitAnswers(answers);
+  } else {
+    await submitAnswers(Array(quiz.value.NumberOfQuestions).fill(-1));
   }
 }
 
@@ -83,7 +100,7 @@ function toggleShow() {
 }
 
 async function submitAnswers(answers) {
-  endQuiz();
+  endQuiz(); 
   await submitAnswer(answers, route.params.id);
 }
 
@@ -182,7 +199,7 @@ onMounted(async () => {
         {{ counter }}
       </div>
       <div id="quiz-table" class="align-self-center" v-show="takingQuiz && !end">
-        <QuizQuestions :questions="quiz.questions" :-number-of-questions="quiz.NumberOfQuestions"
+        <QuizQuestions  ref="quizQuestionsRef" :questions="quiz.questions" :-number-of-questions="quiz.NumberOfQuestions"
           @submit="(answers) => submitAnswers(answers)" />
       </div>
     </div>
@@ -200,23 +217,23 @@ button {
 .btn-bg {
   background-color: var(--secondary-color) !important;
   border-color: var(--primary-color);
+}
 
-  &:hover {
-    box-shadow: 0 4px 8px var(--primary-color);
-  }
+.btn-bg:hover {
+  box-shadow: 0 4px 8px var(--primary-color);
+}
 
-  &:focus {
-    box-shadow: 0 4px 8px var(--primary-color);
-  }
+.btn-bg:focus {
+  box-shadow: 0 4px 8px var(--primary-color);
+}
 
-  &:not(:hover):not(:focus) {
-    box-shadow: none;
-    box-shadow: 0 4px 8px var(--primary-color);
-  }
+.btn-bg:not(:hover):not(:focus) {
+  box-shadow: none;
+  box-shadow: 0 4px 8px var(--primary-color);
+}
 
-  &:active {
-    border-color: var(--primary-color);
-  }
+.btn-bg:active {
+  border-color: var(--primary-color);
 }
 
 #take-quiz {
@@ -277,14 +294,14 @@ button {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   background: rgba(0, 0, 0, 0.01);
   backdrop-filter: blur(2px);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 10;
+  z-index: 2;
 }
 
 .quiz-modal-content {

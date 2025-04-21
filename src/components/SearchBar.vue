@@ -67,7 +67,7 @@ const handleBlur = () => {
     </div>
 
     <div v-show="search.trim().length > 0 && cliick" :ref="suggestionsRef"
-      class="shadow-lg rounded mt-2 p-2 suggestion-item overflow-y-scroll" style="max-height: 450px;">
+      class="shadow-lg rounded mt-2 p-2 suggestion-item overflow-y-scroll" style="max-height: 300px;">
 
       <div v-if="filteredUsers.length">
         <h6 class="text-muted px-2 ">Users</h6>
@@ -88,6 +88,10 @@ const handleBlur = () => {
 </template>
 
 <style scoped>
+.overflow-y-scroll {
+  overflow-y: scroll !important;
+}
+
 .search-bar-container {
   position: absolute;
   top: 10px;
