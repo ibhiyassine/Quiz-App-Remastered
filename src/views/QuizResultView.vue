@@ -89,6 +89,7 @@ function isCorrectAnswer(questionIndex) {
 
 // Load quiz data and user's answers
 onMounted(async () => {
+  document.body.style.overflow = "scroll";
   loading.value = true;
   errorMessage.value = '';
   try {
@@ -160,7 +161,7 @@ onMounted(async () => {
         <div class="bg-white p-4 rounded-3 mb-4 border border-4 border-blue">
           <div class="d-flex justify-content-between">
             <div>
-              <h2 class="fs-2 fw-bold">{{ quiz.name }}</h2>
+              <RouterLink :to="`/quiz/${quiz.id}`" class="text-blue text-decoration-underline"><h2 class="fs-2 fw-bold">{{ quiz.name }}</h2></RouterLink>
               <div class="d-flex flex-wrap gap-1 mb-3">
                 <TopicTag v-for="(topic, index) in quiz.topics" :key="index" :topic="topic" />
               </div>

@@ -80,7 +80,7 @@ const result = ref([]);
       <div class="fs-4 text-blue fw-bold fst-italic text-decoration-underline">
         {{ (username == user) ? 'Your taken quizzes' : `${username}'s taken quizzes` }}
       </div>
-      <div v-if="result" class="d-flex flex-wrap gap-2">
+      <div v-if="result" class="d-flex flex-wrap gap-2" style="max-height: 500px; overflow-y: scroll !important; scrollbar-width: none;">
         <ComapctQuizCard v-for="(quiz, index) in result" :key="index" v-bind="quiz" />
       </div>
     </div>

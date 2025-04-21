@@ -19,7 +19,7 @@ let props = defineProps({
 
 let question_count = ref(0);
 let current_question = ref(1);
-let answers = ref([]);
+const answers = ref(Array(props.NumberOfQuestions).fill(-1));
 let permutation = [];
 let response_count = ref(1);
 function show_ans(i) {
@@ -41,6 +41,20 @@ function show_ques() {
 }
 
 let selected = ref(-1);
+
+onMounted(() => {
+    question_count.value = props.NumberOfQuestions;
+    answers.value = Array(question_count.value).fill(-1);
+    try {
+        response_count.value = props.questions[current_question.value - 1].answers.length;
+    }
+    catch (e) {
+        response_count.value = 1;
+    }
+    permutation = Array.from({ length: response_count.value }, (_, index) => index);
+    permutation = permutation.sort(() => Math.random() - 0.5);
+});
+
 watch(props, () => {
     question_count.value = props.NumberOfQuestions;
     answers.value = Array(question_count.value).fill(-1);
@@ -67,6 +81,9 @@ watch(current_question, (newValue) => {
 
 });
 watch(selected, () => { });
+defineExpose({
+  answers
+});
 </script>
 
 <template>
@@ -114,6 +131,10 @@ watch(selected, () => { });
 </template>
 
 <style scoped>
+
+.overflow-y-scroll {
+  overflow-y: scroll !important;
+}
 .sticky-top {
   position: -webkit-sticky;
   position: sticky;
